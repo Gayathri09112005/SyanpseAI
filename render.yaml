@@ -1,0 +1,55 @@
+# Render Blueprint — New + > Blueprint, then pick this repo.
+# Secrets marked `sync: false` are prompted for once in the Render dashboard; they never live in git.
+services:
+  - type: web
+    name: synapseai-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_URL
+        sync: false # https://<your-frontend>.onrender.com — set after the frontend's first deploy
+      - key: TRUST_PROXY
+        value: "2"
+      - key: AI_MODE
+        value: live
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: GEMINI_FALLBACK_MODELS
+        value: gemini-3.5-flash,gemini-3.1-flash-lite,gemini-flash-lite-latest
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: HUGGINGFACE_API_KEY
+        sync: false
+      - key: HUGGINGFACE_MODEL
+        value: meta-llama/Llama-3.1-8B-Instruct
+      - key: EVIDENCE_PROVIDER
+        value: none
+
+  - type: web
+    name: synapseai-web
+    runtime: node
+    rootDir: frontend
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: BACKEND_URL
+        sync: false # https://<your-api>.onrender.com — read at build time; redeploy after changing it

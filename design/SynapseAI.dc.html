@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700&amp;family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1116; --bg2:#141922; --fg:#EEF1F6; --fg2:#AEB7C6; --fg3:#7C8798;
+  --line:rgba(255,255,255,.10); --line2:rgba(255,255,255,.18);
+  --g1:rgba(255,255,255,.055); --g2:rgba(255,255,255,.032); --gf:rgba(24,29,38,.72);
+  --gin:rgba(0,0,0,.24); --gac:rgba(111,168,255,.16); --gdis:rgba(255,255,255,.025);
+  --hl:rgba(255,255,255,.14);
+  --accent:#6FA8FF; --accent-ink:#06101F; --accent-soft:rgba(111,168,255,.16); --accent-line:rgba(111,168,255,.45);
+  --ok:#54BE8C; --warn:#DFA64F; --err:#E4695E; --run:#53C2C2; --unver:#8E96A5;
+  --sh:0 22px 48px rgba(0,0,0,.45); --sh-sm:0 8px 20px rgba(0,0,0,.30);
+  --r-s:10px; --r-m:16px; --r-l:24px; --r-xl:32px;
+  --sans:"Source Sans 3",-apple-system,Segoe UI,sans-serif;
+  --disp:"Bricolage Grotesque","Source Sans 3",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --spring:420ms cubic-bezier(.22,1.25,.36,1);
+  --ease:240ms cubic-bezier(.2,.8,.2,1);
+}
+[data-theme="light"]{
+  --bg:#F3F1ED; --bg2:#E9E6E0; --fg:#191C22; --fg2:#4B525E; --fg3:#787F8C;
+  --line:rgba(20,24,32,.10); --line2:rgba(20,24,32,.18);
+  --g1:rgba(255,255,255,.66); --g2:rgba(255,255,255,.44); --gf:rgba(255,255,255,.80);
+  --gin:rgba(20,24,32,.05); --gac:rgba(31,99,200,.10); --gdis:rgba(20,24,32,.03);
+  --hl:rgba(255,255,255,.92);
+  --accent:#1F63C8; --accent-ink:#FFFFFF; --accent-soft:rgba(31,99,200,.12); --accent-line:rgba(31,99,200,.38);
+  --ok:#25865F; --warn:#9E6A16; --err:#BC4034; --run:#1C8C8C; --unver:#6C7482;
+  --sh:0 20px 44px rgba(24,28,36,.13); --sh-sm:0 8px 18px rgba(24,28,36,.10);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{color:var(--fg)}
+button{font-family:inherit}
+::selection{background:var(--accent-soft)}
+@keyframes dashmove{to{stroke-dashoffset:-28}}
+@keyframes pulsering{0%,100%{box-shadow:0 0 0 0 var(--accent-soft)}50%{box-shadow:0 0 0 10px rgba(0,0,0,0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes popin{from{opacity:0;transform:translateY(18px) scale(.96)}60%{transform:translateY(-3px) scale(1.007)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){*{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.55;padding-bottom:80px">
+
+  <div style="position:sticky;top:0;z-index:60;display:flex;justify-content:center;padding:{{ navWrapPad }};pointer-events:none;transition:padding 560ms cubic-bezier(.34,1.5,.5,1)">
+    <div style="pointer-events:auto;width:100%;max-width:{{ navMaxW }};border:1px solid {{ navBorder }};border-radius:{{ navRadius }};background:{{ navBg }};backdrop-filter:blur({{ navBlur }}) saturate(1.5);-webkit-backdrop-filter:blur({{ navBlur }}) saturate(1.5);box-shadow:{{ navShadow }};transition:max-width 560ms cubic-bezier(.34,1.5,.5,1),border-radius 560ms cubic-bezier(.34,1.5,.5,1),box-shadow 420ms cubic-bezier(.2,.8,.2,1),background 320ms ease,border-color 320ms ease">
+      <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;row-gap:10px;padding:{{ navPad }};transition:padding 560ms cubic-bezier(.34,1.5,.5,1)">
+        <div style="display:flex;align-items:center;gap:10px;flex:none">
+          <div style="width:26px;height:26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);display:flex;align-items:center;justify-content:center">
+            <div style="width:9px;height:9px;background:var(--accent);border-radius:2px;transform:rotate(45deg)"></div>
+          </div>
+          <div style="font-family:var(--disp);font-weight:600;font-size:17px;letter-spacing:-.01em">SynapseAI</div>
+        </div>
+        <nav style="display:flex;gap:2px;margin-left:auto;align-items:center;flex-wrap:wrap;min-width:0">
+          <sc-for list="{{ views }}" as="v" hint-placeholder-count="5">
+            <button onClick="{{ v.go }}" style="border:0;background:transparent;color:{{ v.fg }};padding:8px 10px;border-radius:10px;font-size:14.5px;font-weight:500;cursor:pointer;white-space:nowrap;transition:color var(--ease),background var(--ease)" style-hover="color:var(--fg);background:var(--g2)">{{ v.label }}</button>
+          </sc-for>
+        </nav>
+        <div style="display:flex;align-items:center;gap:8px;flex:none">
+          <sc-if value="{{ signedOut }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ goAuth }}" style="display:inline-flex;align-items:center;justify-content:center;min-width:120px;height:40px;padding:0 22px;border-radius:999px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14.5px;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.97)">Sign in</button>
+          </sc-if>
+          <sc-if value="{{ signedIn }}" hint-placeholder-val="{{ false }}">
+            <button onClick="{{ signOut }}" style="padding:9px 14px;border-radius:999px;border:1px solid transparent;background:transparent;color:var(--fg2);font-size:14.5px;font-weight:500;cursor:pointer;white-space:nowrap;transition:background var(--ease),color var(--ease)" style-hover="background:var(--g2);color:var(--fg)">Sign out</button>
+            <button onClick="{{ goApp }}" style="display:inline-flex;align-items:center;justify-content:center;min-width:140px;height:40px;padding:0 20px;border-radius:999px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14.5px;font-weight:600;cursor:pointer;white-space:nowrap;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.97)">Ask a question</button>
+            <button title="Profile" style="width:38px;height:38px;border-radius:999px;border:1px solid var(--line2);background:var(--gac);color:var(--fg);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.94)">JD</button>
+          </sc-if>
+          <button onClick="{{ toggleTheme }}" title="Toggle theme" style="width:38px;height:38px;border-radius:999px;border:1px solid var(--line);background:var(--g1);color:var(--fg2);cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:transform var(--spring),color var(--ease);box-shadow:inset 0 1px 0 var(--hl)" style-hover="transform:translateY(-2px);color:var(--fg)" style-active="transform:scale(.94)">{{ themeIcon }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1240px;margin:0 auto;padding:0 24px">
+
+    <section id="overview" style="padding:72px 0 28px;display:grid;grid-template-columns:minmax(0,1fr);gap:26px;justify-items:center;text-align:center">
+      <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center">
+        <sc-for list="{{ stages }}" as="s" hint-placeholder-count="5">
+          <div style="display:flex;align-items:center">
+            <div style="display:flex;align-items:center;gap:9px;padding:7px 15px;border-radius:999px;border:1px solid var(--line);background:var(--g2);font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:{{ s.c }}">
+              <span style="width:7px;height:7px;border-radius:50%;background:{{ s.dot }}"></span><span style="color:var(--fg3)">{{ s.n }}</span>{{ s.label }}
+            </div>
+            <div style="width:26px;height:1px;background:var(--line2);display:{{ s.barDisplay }}"></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:9px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(14px);font-size:13px;color:var(--fg2)">
+        <span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>Three models. One accountable answer.
+      </div>
+      <h1 style="font-family:var(--disp);font-weight:600;font-size:clamp(40px,6.2vw,76px);line-height:1.02;letter-spacing:-.035em;margin:0;max-width:16ch;text-wrap:balance">Think together. Verify smarter.</h1>
+      <p style="margin:0;max-width:62ch;font-size:clamp(17px,1.6vw,20px);color:var(--fg2);line-height:1.6;text-wrap:pretty">SynapseAI routes every question through a generator, a verifier, and a reasoning critic. You see what each one contributed, what was corrected, and what is still uncertain — before you trust the answer.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+        <button onClick="{{ goApp }}" style="padding:13px 24px;border-radius:14px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.975)">Open the workspace</button>
+        <button onClick="{{ goCompare }}" style="padding:13px 24px;border-radius:14px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:15px;font-weight:600;cursor:pointer;backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring),background var(--ease)" style-hover="transform:translateY(-2px)" style-active="transform:translateY(0) scale(.975)">See a verified answer</button>
+      </div>
+    </section>
+
+    <section style="margin:26px 0 0;position:relative;border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border-radius:var(--r-xl);box-shadow:var(--sh),inset 0 1px 0 var(--hl);overflow:hidden">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 22px;border-bottom:1px solid var(--line);flex-wrap:wrap">
+        <div style="font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg3)">Live pipeline</div>
+        <div style="font-size:13.5px;color:var(--fg2)">“Does raising the minimum wage reduce employment?”</div>
+      </div>
+      <div style="position:relative;height:380px;min-width:0">
+        <svg viewBox="0 0 1000 380" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+          <g fill="none" stroke="var(--line2)" stroke-width="1.25" vector-effect="non-scaling-stroke">
+            <path d="M152 190 C 250 190, 262 68, 358 68"></path>
+            <path d="M152 190 L 358 190"></path>
+            <path d="M152 190 C 250 190, 262 312, 358 312"></path>
+            <path d="M572 68 C 612 68, 600 190, 628 190"></path>
+            <path d="M572 190 L 628 190"></path>
+            <path d="M572 312 C 612 312, 600 190, 628 190"></path>
+            <path d="M772 190 L 848 190"></path>
+          </g>
+          <g fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 9" vector-effect="non-scaling-stroke" style="animation:dashmove 1.3s linear infinite">
+            <path d="M152 190 C 250 190, 262 68, 358 68"></path>
+            <path d="M152 190 L 358 190"></path>
+            <path d="M152 190 C 250 190, 262 312, 358 312"></path>
+            <path d="M572 68 C 612 68, 600 190, 628 190"></path>
+            <path d="M572 190 L 628 190"></path>
+            <path d="M572 312 C 612 312, 600 190, 628 190"></path>
+            <path d="M772 190 L 848 190"></path>
+          </g>
+        </svg>
+        <div style="position:absolute;left:2%;top:50%;transform:translateY(-50%);width:13%;min-width:96px;padding:14px 12px;border-radius:var(--r-m);border:1px solid var(--line2);background:var(--g1);backdrop-filter:blur(18px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);text-align:center">
+          <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--fg3)">INPUT</div>
+          <div style="font-size:14px;font-weight:600;margin-top:4px">Question</div>
+        </div>
+        <sc-for list="{{ heroNodes }}" as="n" hint-placeholder-count="3">
+          <div style="position:absolute;left:36%;top:{{ n.top }};transform:translateY(-50%);width:21%;min-width:150px;padding:14px 16px;border-radius:var(--r-m);border:1px solid {{ n.line }};background:var(--g1);backdrop-filter:blur(18px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl)">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ n.dot }};animation:blink 1.8s ease-in-out infinite"></span>
+              <div style="font-size:14px;font-weight:600;letter-spacing:-.01em">{{ n.name }}</div>
+            </div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--fg3);margin-top:6px">{{ n.model }}</div>
+            <div style="font-size:12.5px;color:var(--fg2);margin-top:8px;line-height:1.4">{{ n.note }}</div>
+          </div>
+        </sc-for>
+        <div style="position:absolute;left:70%;top:50%;transform:translate(-50%,-50%);width:14%;min-width:112px;padding:16px 12px;border-radius:50%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--accent-line);background:var(--gac);backdrop-filter:blur(18px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);animation:pulsering 2.6s ease-out infinite">
+          <div style="font-size:14px;font-weight:600">Synthesis</div>
+          <div style="font-family:var(--mono);font-size:10.5px;color:var(--fg3);margin-top:3px">2 refinements</div>
+        </div>
+        <div style="position:absolute;right:2%;top:50%;transform:translateY(-50%);width:13%;min-width:96px;padding:14px 12px;border-radius:var(--r-m);border:1px solid var(--line2);background:var(--g1);backdrop-filter:blur(18px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);text-align:center">
+          <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;color:var(--ok)">VERIFIED</div>
+          <div style="font-size:14px;font-weight:600;margin-top:4px">Answer</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="steps" style="padding:76px 0 8px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px">
+        <h2 style="font-family:var(--disp);font-weight:600;font-size:clamp(26px,3vw,38px);letter-spacing:-.025em;margin:0">Five steps, all of them visible</h2>
+        <div style="font-size:14px;color:var(--fg3);font-family:var(--mono)">avg. 11.4s</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px">
+        <sc-for list="{{ workflow }}" as="w" hint-placeholder-count="5">
+          <div style="padding:20px 18px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring),background var(--ease)" style-hover="transform:translateY(-4px);background:var(--g1)">
+            <div style="font-family:var(--mono);font-size:11px;color:var(--accent)">{{ w.n }}</div>
+            <div style="font-family:var(--disp);font-size:18px;font-weight:600;margin-top:10px;letter-spacing:-.015em">{{ w.title }}</div>
+            <div style="font-size:14px;color:var(--fg2);margin-top:7px;line-height:1.5">{{ w.body }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="padding:60px 0 8px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
+      <sc-for list="{{ features }}" as="f" hint-placeholder-count="4">
+        <div style="padding:26px 24px;border-radius:var(--r-l);border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-5px)">
+          <div style="width:30px;height:30px;border-radius:9px;border:1px solid var(--line2);background:var(--g2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--accent)">{{ f.k }}</div>
+          <div style="font-family:var(--disp);font-size:21px;font-weight:600;margin-top:16px;letter-spacing:-.02em">{{ f.title }}</div>
+          <div style="font-size:15px;color:var(--fg2);margin-top:9px;line-height:1.55;text-wrap:pretty">{{ f.body }}</div>
+        </div>
+      </sc-for>
+    </section>
+
+    <section id="transparency" style="margin:60px 0 0;padding:34px;border-radius:var(--r-xl);border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(20px);box-shadow:inset 0 1px 0 var(--hl);display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:34px">
+        <div>
+          <h2 style="font-family:var(--disp);font-weight:600;font-size:clamp(24px,2.6vw,32px);letter-spacing:-.025em;margin:0 0 12px">Transparency is the product</h2>
+          <p style="margin:0;color:var(--fg2);font-size:15.5px;line-height:1.6;max-width:52ch;text-wrap:pretty">Agreement between models is not proof. SynapseAI shows disagreement as prominently as consensus, labels every claim it could not source, and never hides a correction inside a rewritten paragraph.</p>
+        </div>
+        <div style="display:grid;gap:10px;align-content:start">
+          <sc-for list="{{ privacy }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl)">
+              <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:8px;flex:none"></span>
+              <div>
+                <div style="font-size:14.5px;font-weight:600">{{ p.t }}</div>
+                <div style="font-size:13.5px;color:var(--fg2);line-height:1.45">{{ p.b }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+    </section>
+
+    <section style="margin:56px 0 0;padding:48px 34px;border-radius:var(--r-xl);border:1px solid var(--accent-line);background:var(--gac);backdrop-filter:blur(22px);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);display:grid;gap:16px;justify-items:center;text-align:center">
+      <h2 style="font-family:var(--disp);font-weight:600;font-size:clamp(24px,3vw,34px);letter-spacing:-.03em;margin:0;max-width:22ch">Sign in to run your own questions through all three agents.</h2>
+      <p style="margin:0;color:var(--fg2);font-size:15.5px;max-width:52ch;line-height:1.6;text-wrap:pretty">The workspace, the verification record and your conversation history unlock once you are signed in. Reading the method needs no account.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:4px">
+        <button onClick="{{ goAuth }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 26px;border-radius:999px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.97)">Sign in to SynapseAI</button>
+        <button onClick="{{ goApp }}" style="display:inline-flex;align-items:center;justify-content:center;height:46px;padding:0 26px;border-radius:999px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:15px;font-weight:600;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.97)">Ask a question</button>
+      </div>
+    </section>
+
+    <footer style="margin-top:56px;padding:26px 4px;border-top:1px solid var(--line);display:flex;gap:18px;flex-wrap:wrap;align-items:center;justify-content:space-between;color:var(--fg3);font-size:13.5px">
+      <div>© 2026 SynapseAI — Think together. Verify smarter. Answer with confidence.</div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap"><a href="#">Model providers</a><a href="#">Evidence policy</a><a href="#">Security</a><a href="#">Docs</a></div>
+    </footer>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1440px;margin:0 auto;padding:10px 20px 0;display:flex;gap:16px;align-items:flex-start;min-width:0">
+
+    <aside style="width:{{ sidebarW }};flex:none;position:sticky;top:88px;border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border-radius:5px;box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);overflow:hidden;transition:width var(--spring)">
+      <div style="padding:14px;display:grid;gap:12px">
+        <div style="display:flex;gap:8px;align-items:center">
+          <button onClick="{{ toggleSidebar }}" title="Collapse sidebar" style="width:36px;height:36px;flex:none;border-radius:4px;border:1px solid var(--line);background:var(--g2);color:var(--fg2);cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-1px);color:var(--fg)" style-active="transform:scale(.94)">☰</button>
+          <div style="display:{{ sidebarInner }};flex:1;min-width:0">
+            <button style="width:100%;padding:9px 14px;border-radius:4px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:600;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-1px);filter:brightness(1.07)" style-active="transform:scale(.97)">＋ New conversation</button>
+          </div>
+        </div>
+        <div style="display:{{ sidebarInner }}">
+          <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:4px;border:1px solid var(--line);background:var(--gin);box-shadow:inset 0 1px 0 var(--hl)">
+            <span style="color:var(--fg3);font-size:13px">⌕</span>
+            <input placeholder="Search conversations" style="flex:1;min-width:0;border:0;background:transparent;color:var(--fg);font-family:var(--sans);font-size:14px;outline:none">
+          </div>
+        </div>
+      </div>
+      <div style="display:{{ sidebarInner }};padding:0 14px 16px;display:grid;gap:14px">
+        <div>
+          <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--fg3);padding:0 4px 8px">TODAY</div>
+          <div style="display:grid;gap:4px">
+            <div style="padding:10px 12px;border-radius:4px;border:1px solid var(--accent-line);background:var(--gac);cursor:pointer">
+              <div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Minimum wage &amp; employment</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:2px">3 agents · verified · 2m ago</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:background var(--ease)" style-hover="background:var(--g2)">
+              <div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Postgres index bloat triage</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:2px">1 unverified claim · 1h ago</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:background var(--ease)" style-hover="background:var(--g2)">
+              <div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">GLP-1 trial endpoints</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:2px">verifier failed · 4h ago</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;color:var(--fg3);padding:0 4px 8px">EARLIER</div>
+          <div style="display:grid;gap:4px">
+            <div style="padding:10px 12px;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:background var(--ease)" style-hover="background:var(--g2)">
+              <div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">EU AI Act — high-risk tiers</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:2px">verified · Tue</div>
+            </div>
+            <div style="padding:10px 12px;border-radius:4px;border:1px solid transparent;cursor:pointer;transition:background var(--ease)" style-hover="background:var(--g2)">
+              <div style="font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Series B dilution math</div>
+              <div style="font-size:12px;color:var(--fg3);margin-top:2px">verified · Mon</div>
+            </div>
+          </div>
+        </div>
+        <button onClick="{{ openSettings }}" style="margin-top:2px;padding:10px 12px;border-radius:4px;border:1px solid var(--line);background:var(--g2);color:var(--fg2);font-size:13.5px;text-align:left;cursor:pointer;transition:transform var(--spring),color var(--ease)" style-hover="transform:translateY(-1px);color:var(--fg)" style-active="transform:scale(.99)">⚙ Settings &amp; providers</button>
+      </div>
+    </aside>
+
+    <main style="flex:1;min-width:0;display:grid;gap:16px;padding-bottom:40px">
+
+      <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border-radius:5px;box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);padding:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+          <div style="font-family:var(--disp);font-size:20px;font-weight:600;letter-spacing:-.02em">Ask SynapseAI</div>
+          <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3)">3 providers online</div>
+        </div>
+        <div style="border:1px solid var(--line2);background:var(--gin);border-radius:4px;padding:16px 18px;box-shadow:inset 0 1px 0 var(--hl);transition:border-color var(--ease)" style-focus="border-color:var(--accent)">
+          <textarea rows="3" placeholder="Ask a question worth checking. Long questions are welcome — paste context, constraints, and what you already ruled out." style="width:100%;border:0;background:transparent;color:var(--fg);font-family:var(--sans);font-size:17px;line-height:1.55;outline:none;resize:vertical">Does raising the minimum wage reduce employment? I care about the empirical record, not the policy argument.</textarea>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
+            <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+              <span style="font-family:var(--mono);font-size:11px;color:var(--fg3);margin-right:4px">STYLE</span>
+              <sc-for list="{{ styles }}" as="s" hint-placeholder-count="3">
+                <button onClick="{{ s.go }}" style="padding:6px 12px;border-radius:4px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13px;cursor:pointer;transition:transform var(--spring)" style-hover="transform:translateY(-1px)" style-active="transform:scale(.96)">{{ s.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button onClick="{{ reset }}" style="padding:10px 16px;border-radius:5px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:14px;font-weight:500;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.97)">Clear</button>
+              <button onClick="{{ run }}" style="padding:10px 20px;border-radius:5px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.97)">{{ runLabel }}</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <sc-for list="{{ prompts }}" as="p" hint-placeholder-count="4">
+            <button style="padding:8px 14px;border-radius:4px;border:1px solid var(--line);background:var(--g2);color:var(--fg2);font-size:13.5px;cursor:pointer;transition:transform var(--spring),color var(--ease)" style-hover="transform:translateY(-2px);color:var(--fg)" style-active="transform:scale(.97)">{{ p }}</button>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(18px);border-radius:5px;box-shadow:inset 0 1px 0 var(--hl);padding:20px">
+        <div style="display:grid;gap:10px;align-content:start">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+            <div style="font-size:14.5px;font-weight:600">Reasoning depth</div>
+            <div style="font-family:var(--mono);font-size:12.5px;color:var(--accent);transition:transform var(--spring)">{{ depthLabel }}</div>
+          </div>
+          <div data-track="1" onPointerDown="{{ depthDown }}" style="position:relative;height:30px;display:flex;align-items:center;cursor:pointer;touch-action:none">
+            <div style="position:absolute;inset:11px 0;border-radius:999px;border:1px solid var(--line2);background:var(--gin);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)"></div>
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:{{ depthPct }};border-radius:999px;background:var(--accent);transition:width 120ms linear"></div>
+            <div style="position:absolute;left:{{ depthPct }};width:22px;height:22px;margin-left:-11px;border-radius:50%;border:1px solid var(--line2);background:var(--gf);backdrop-filter:blur(8px);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.5);transition:width 120ms linear,left 120ms linear,transform var(--spring)" style-hover="transform:scale(1.12)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--fg3)"><span>Fast</span><span>Exhaustive</span></div>
+        </div>
+
+        <div style="display:grid;gap:10px;align-content:start">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">
+            <div style="font-size:14.5px;font-weight:600">Refinement passes</div>
+            <div style="font-family:var(--mono);font-size:12.5px;color:var(--accent)">{{ lo }}–{{ hi }}</div>
+          </div>
+          <div data-track="1" style="position:relative;height:30px;display:flex;align-items:center;touch-action:none">
+            <div style="position:absolute;inset:11px 0;border-radius:999px;border:1px solid var(--line2);background:var(--gin);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)"></div>
+            <div style="position:absolute;left:{{ rangeLeft }};width:{{ rangeWidth }};top:11px;bottom:11px;background:var(--accent)"></div>
+            <div onPointerDown="{{ loDown }}" style="position:absolute;left:{{ loPct }};width:22px;height:22px;margin-left:-11px;border-radius:50%;border:1px solid var(--line2);background:var(--gf);backdrop-filter:blur(8px);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.5);cursor:grab;transition:transform var(--spring)" style-hover="transform:scale(1.12)" style-active="transform:scale(1.04)"></div>
+            <div onPointerDown="{{ hiDown }}" style="position:absolute;left:{{ hiPct }};width:22px;height:22px;margin-left:-11px;border-radius:50%;border:1px solid var(--line2);background:var(--gf);backdrop-filter:blur(8px);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.5);cursor:grab;transition:transform var(--spring)" style-hover="transform:scale(1.12)" style-active="transform:scale(1.04)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--fg3)"><span>0</span><span>8 passes</span></div>
+        </div>
+
+        <div style="display:grid;gap:10px;align-content:start">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
+            <div>
+              <div style="font-size:14.5px;font-weight:600">Evidence retrieval</div>
+              <div style="font-size:13px;color:var(--fg3)">Verifier may search sources</div>
+            </div>
+            <button onClick="{{ toggleEvidence }}" role="switch" style="width:52px;height:30px;flex:none;border-radius:999px;border:1px solid {{ evBd }};background:{{ evBg }};position:relative;cursor:pointer;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:background var(--ease),border-color var(--ease)">
+              <span style="position:absolute;top:3px;left:{{ evX }};width:22px;height:22px;border-radius:50%;background:var(--gf);border:1px solid var(--line2);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.55);transition:left var(--spring)"></span>
+            </button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px">
+            <div>
+              <div style="font-size:14.5px;font-weight:600">Stream partial answers</div>
+              <div style="font-size:13px;color:var(--fg3)">Show the draft before verification</div>
+            </div>
+            <button onClick="{{ toggleStream }}" role="switch" style="width:52px;height:30px;flex:none;border-radius:999px;border:1px solid {{ stBd }};background:{{ stBg }};position:relative;cursor:pointer;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:background var(--ease),border-color var(--ease)">
+              <span style="position:absolute;top:3px;left:{{ stX }};width:22px;height:22px;border-radius:50%;background:var(--gf);border:1px solid var(--line2);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.55);transition:left var(--spring)"></span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section style="display:grid;gap:14px">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <sc-for list="{{ pipeline }}" as="s" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:9px;padding:9px 15px;border-radius:4px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13.5px;font-weight:500;backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 var(--hl);transition:background var(--ease),border-color var(--ease),color var(--ease)">
+              <span style="width:8px;height:8px;border-radius:50%;background:{{ s.dot }}"></span>{{ s.label }}
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px">
+          <sc-for list="{{ agents }}" as="a" hint-placeholder-count="3">
+            <div style="border:1px solid {{ a.line }};background:{{ a.bg }};backdrop-filter:blur(22px) saturate(1.4);-webkit-backdrop-filter:blur(22px) saturate(1.4);border-radius:5px;box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);padding:20px;display:grid;gap:12px;align-content:start;transition:transform var(--spring),border-color var(--ease),background var(--ease);animation:popin 520ms cubic-bezier(.22,1.2,.36,1) both" style-hover="transform:translateY(-4px)">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+                <div>
+                  <div style="font-family:var(--disp);font-size:18px;font-weight:600;letter-spacing:-.02em">{{ a.name }}</div>
+                  <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3);margin-top:4px">{{ a.model }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:7px;padding:5px 11px;border-radius:4px;border:1px solid var(--line);background:var(--g2);font-size:12px;color:{{ a.color }};white-space:nowrap">
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ a.color }};animation:{{ a.spin }}"></span>{{ a.statusLabel }}
+                </div>
+              </div>
+              <div style="font-size:13.5px;color:var(--fg3);line-height:1.5">{{ a.role }}</div>
+              <div style="padding:12px 14px;border-radius:4px;border:1px solid var(--line);background:var(--gin);font-size:14px;line-height:1.5;box-shadow:inset 0 1px 0 var(--hl)">{{ a.finding }}</div>
+              <div style="display:{{ a.detailDisplay }};gap:8px">
+                <sc-for list="{{ a.detail }}" as="d" hint-placeholder-count="3">
+                  <div style="display:flex;gap:10px;font-size:13.5px;color:var(--fg2);line-height:1.5">
+                    <span style="color:var(--accent)">—</span><span>{{ d }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ a.onToggle }}" style="justify-self:start;padding:7px 13px;border-radius:4px;border:1px solid transparent;background:transparent;color:var(--fg2);font-size:13px;cursor:pointer;transition:background var(--ease),color var(--ease)" style-hover="background:var(--g2);color:var(--fg)">{{ a.openLabel }}</button>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <sc-if value="{{ idle }}" hint-placeholder-val="{{ false }}">
+        <section style="border:1px dashed var(--line2);background:var(--g2);border-radius:5px;padding:56px 24px;text-align:center;display:grid;gap:10px;justify-items:center">
+          <div style="width:44px;height:44px;border-radius:5px;border:1px solid var(--accent-line);background:var(--accent-soft);display:flex;align-items:center;justify-content:center"><div style="width:12px;height:12px;background:var(--accent);border-radius:3px;transform:rotate(45deg)"></div></div>
+          <div style="font-family:var(--disp);font-size:20px;font-weight:600">No answer yet</div>
+          <div style="font-size:15px;color:var(--fg2);max-width:46ch">Ask a question and three models will work it in sequence. You will see each contribution as it lands.</div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ running }}" hint-placeholder-val="{{ false }}">
+        <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);border-radius:5px;box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg2)">
+            <span style="width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--accent);animation:spin 900ms linear infinite"></span>{{ runningLabel }}
+          </div>
+          <div style="height:12px;border-radius:6px;background:var(--gin);width:72%"></div>
+          <div style="height:12px;border-radius:6px;background:var(--gin);width:94%"></div>
+          <div style="height:12px;border-radius:6px;background:var(--gin);width:61%"></div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ done }}" hint-placeholder-val="{{ true }}">
+      <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border-radius:6px;box-shadow:var(--sh),inset 0 1px 0 var(--hl);overflow:hidden;animation:rise 480ms cubic-bezier(.22,1.2,.36,1) both">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 24px;border-bottom:1px solid var(--line)">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:9px;height:9px;border-radius:50%;background:var(--ok)"></span>
+            <div style="font-family:var(--disp);font-size:20px;font-weight:600;letter-spacing:-.02em">Final answer</div>
+            <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3)">synthesized · 11.4s · 2 passes</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button style="padding:8px 14px;border-radius:4px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:13.5px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.96)">Copy</button>
+            <button style="padding:8px 14px;border-radius:4px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:13.5px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.96)">Regenerate</button>
+            <button style="padding:8px 14px;border-radius:4px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:13.5px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.96)">Export</button>
+            <button onClick="{{ goCompare }}" style="padding:8px 14px;border-radius:4px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:scale(.96)">Compare versions</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--g2)">
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--g1);font-size:12.5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>4 claims supported</div>
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--g1);font-size:12.5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--warn)"></span>1 corrected</div>
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--g1);font-size:12.5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--unver)"></span>1 unverified</div>
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:4px;border:1px solid var(--line);background:var(--g1);font-size:12.5px"><span style="width:7px;height:7px;border-radius:50%;background:var(--err)"></span>0 contradictions</div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:0">
+          <article style="padding:26px 30px;min-width:0;font-size:16.5px;line-height:1.68;color:var(--fg)">
+            <h3 style="font-family:var(--disp);font-size:24px;font-weight:600;letter-spacing:-.02em;margin:0 0 12px">The empirical record is mixed, and the split is mostly about method</h3>
+            <p style="margin:0 0 14px;text-wrap:pretty">Modern studies do not find the large employment losses predicted by a simple competitive labour market model. <span style="border-bottom:2px solid var(--ok);padding-bottom:1px">Card and Krueger's 1994 New Jersey–Pennsylvania comparison found no significant employment decline in fast food after a wage increase</span>, and later replications using administrative payroll data reached similar conclusions at moderate wage floors.</p>
+            <p style="margin:0 0 14px;text-wrap:pretty"><span style="border-bottom:2px solid var(--warn);padding-bottom:1px">The 2017 Seattle study is often cited as the counterexample; it reported a reduction in hours worked, not in the number of people employed</span> — the draft answer conflated the two, and the verifier corrected it.</p>
+            <p style="margin:0 0 16px;text-wrap:pretty">Two distinctions decide most disagreements: <strong style="font-weight:600">short-run versus long-run effects</strong>, and how far the new floor sits above the local median wage. <span style="border-bottom:2px dashed var(--unver);padding-bottom:1px">Commonly quoted elasticities of −0.1 to −0.3 could not be traced to a single authoritative source; published estimates span roughly −0.5 to +0.1.</span></p>
+
+            <div style="border:1px solid var(--line);border-radius:4px;overflow:hidden;margin:0 0 16px">
+              <table style="width:100%;border-collapse:collapse;font-size:14.5px">
+                <thead><tr style="background:var(--g2)">
+                  <th style="text-align:left;padding:10px 14px;font-weight:600;border-bottom:1px solid var(--line)">Study</th>
+                  <th style="text-align:left;padding:10px 14px;font-weight:600;border-bottom:1px solid var(--line)">Measure</th>
+                  <th style="text-align:left;padding:10px 14px;font-weight:600;border-bottom:1px solid var(--line)">Finding</th>
+                </tr></thead>
+                <tbody>
+                  <tr><td style="padding:10px 14px;border-bottom:1px solid var(--line)">Card &amp; Krueger 1994</td><td style="padding:10px 14px;border-bottom:1px solid var(--line);color:var(--fg2)">Headcount</td><td style="padding:10px 14px;border-bottom:1px solid var(--line);color:var(--fg2)">No significant decline</td></tr>
+                  <tr><td style="padding:10px 14px;border-bottom:1px solid var(--line)">Seattle (UW) 2017</td><td style="padding:10px 14px;border-bottom:1px solid var(--line);color:var(--fg2)">Hours</td><td style="padding:10px 14px;border-bottom:1px solid var(--line);color:var(--fg2)">Reduced low-wage hours</td></tr>
+                  <tr><td style="padding:10px 14px">Cengiz et al. 2019</td><td style="padding:10px 14px;color:var(--fg2)">Jobs by wage bin</td><td style="padding:10px 14px;color:var(--fg2)">Jobs shift up, count stable</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <p style="margin:0 0 10px;font-size:14px;color:var(--fg2)">Employment elasticity, as used above:</p>
+            <div style="padding:14px 18px;border-radius:4px;border:1px solid var(--line);background:var(--gin);font-family:var(--mono);font-size:15px;text-align:center;margin:0 0 16px;box-shadow:inset 0 1px 0 var(--hl)">ε = (ΔE / E) ÷ (ΔW / W)</div>
+
+            <div style="border-radius:4px;border:1px solid var(--line);background:var(--gin);overflow:hidden;margin:0 0 16px;box-shadow:inset 0 1px 0 var(--hl)">
+              <div style="padding:8px 14px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:11px;color:var(--fg3)">bunching-estimator.py</div>
+              <pre style="margin:0;padding:14px;overflow:auto;font-family:var(--mono);font-size:13px;line-height:1.6;color:var(--fg2)"><code>missing = jobs_below_new_floor.sum()
+excess  = jobs_at_or_above_floor.sum()
+net     = excess - missing   # ≈ 0 in Cengiz et al.</code></pre>
+            </div>
+
+            <ul style="margin:0;padding-left:20px;color:var(--fg2);font-size:15.5px;line-height:1.6">
+              <li style="margin-bottom:6px">Moderate increases: employment effects near zero in most credible designs.</li>
+              <li style="margin-bottom:6px">Large increases relative to local median: evidence thins and uncertainty widens.</li>
+              <li>Hours, scheduling and turnover move before headcount does.</li>
+            </ul>
+          </article>
+
+          <aside style="padding:26px 24px;min-width:0;border-left:1px solid var(--line);background:var(--g2);display:grid;gap:18px;align-content:start">
+            <div>
+              <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3);margin-bottom:10px">EVIDENCE</div>
+              <div style="display:grid;gap:8px">
+                <sc-for list="{{ sources }}" as="s" hint-placeholder-count="3">
+                  <div style="padding:12px 14px;border-radius:4px;border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)">
+                    <div style="font-size:13.5px;font-weight:600;line-height:1.35">{{ s.t }}</div>
+                    <div style="font-family:var(--mono);font-size:11px;color:var(--fg3);margin-top:5px">{{ s.m }}</div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="padding:14px 16px;border-radius:4px;border:1px solid var(--line2);background:var(--gin);box-shadow:inset 0 1px 0 var(--hl)">
+              <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:var(--unver)"></span>Still uncertain</div>
+              <div style="font-size:13.5px;color:var(--fg2);line-height:1.5">The elasticity range is unsourced, and no included study covers a floor above 60% of the local median wage. Two of three agents flagged this independently; that is not the same as being right.</div>
+            </div>
+            <div>
+              <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3);margin-bottom:10px">AGENT FINDINGS</div>
+              <div style="display:grid;gap:6px">
+                <sc-for list="{{ agents }}" as="a" hint-placeholder-count="3">
+                  <button onClick="{{ a.onToggle }}" style="text-align:left;padding:11px 13px;border-radius:4px;border:1px solid var(--line);background:var(--g1);color:var(--fg);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:9px;transition:transform var(--spring)" style-hover="transform:translateY(-2px)">
+                    <span style="width:7px;height:7px;border-radius:50%;background:{{ a.color }};flex:none"></span>{{ a.name }}
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+      </sc-if>
+    </main>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isCompare }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1240px;margin:0 auto;padding:24px 24px 60px;display:grid;gap:16px">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">
+      <div>
+        <h2 style="font-family:var(--disp);font-size:clamp(26px,3vw,36px);font-weight:600;letter-spacing:-.03em;margin:0">What changed, and why</h2>
+        <p style="margin:6px 0 0;color:var(--fg2);font-size:15.5px;max-width:64ch;text-wrap:pretty">Every version of this answer is kept. Agreement between models is recorded, not treated as proof.</p>
+      </div>
+      <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3)">conversation c1 · 2 refinement passes</div>
+    </div>
+
+    <div style="display:flex;gap:4px;padding:5px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 var(--hl);flex-wrap:wrap">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5">
+        <button onClick="{{ t.go }}" style="flex:1;min-width:140px;padding:11px 14px;border-radius:11px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:500;cursor:pointer;transition:background var(--ease),color var(--ease),transform var(--spring)" style-hover="transform:translateY(-1px)" style-active="transform:scale(.985)">
+          <span style="display:inline-flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.dot }}"></span>{{ t.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px;align-items:start">
+      <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border-radius:var(--r-l);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);padding:26px 28px;min-width:0;animation:rise 340ms cubic-bezier(.22,1.2,.36,1) both">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+          <div style="font-family:var(--disp);font-size:21px;font-weight:600;letter-spacing:-.02em">{{ cmpTitle }}</div>
+          <div style="padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--g2);font-family:var(--mono);font-size:11px;color:var(--fg3)">{{ cmpMeta }}</div>
+        </div>
+        <div style="display:grid;gap:12px;margin-top:14px;font-size:16px;line-height:1.66;color:var(--fg2)">
+          <sc-for list="{{ cmpBody }}" as="p" hint-placeholder-count="3">
+            <p style="margin:0;text-wrap:pretty">{{ p }}</p>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="display:grid;gap:12px;min-width:0">
+        <div style="border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(18px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:20px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3);margin-bottom:12px">CHANGES IN THIS STEP</div>
+          <div style="display:grid;gap:10px">
+            <sc-for list="{{ cmpChanges }}" as="c" hint-placeholder-count="3">
+              <div style="display:grid;gap:5px;padding:12px 14px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl)">
+                <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:{{ c.color }};font-family:var(--mono);letter-spacing:.06em">
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ c.color }}"></span>{{ c.kind }}
+                </div>
+                <div style="font-size:14px;color:var(--fg);line-height:1.5">{{ c.text }}</div>
+                <div style="font-size:13px;color:var(--fg3);line-height:1.45">{{ c.why }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="border:1px solid var(--line2);background:var(--gin);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:18px 20px">
+          <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;margin-bottom:6px"><span style="width:7px;height:7px;border-radius:50%;background:var(--unver)"></span>Carried forward as uncertain</div>
+          <div style="font-size:13.5px;color:var(--fg2);line-height:1.5">The elasticity range survives into the final answer with its marker intact. Two agents agreed it was plausible; neither could source it.</div>
+        </div>
+      </section>
+    </div>
+
+    <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(22px);border-radius:var(--r-l);box-shadow:var(--sh-sm),inset 0 1px 0 var(--hl);overflow:hidden">
+      <div style="padding:16px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="font-family:var(--disp);font-size:18px;font-weight:600;letter-spacing:-.02em">Draft vs. final, side by side</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--fg3)">claim 3 of 6</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+        <div style="padding:22px 24px;border-right:1px solid var(--line);min-width:0">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--warn);margin-bottom:10px">DRAFT · CORRECTED</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:var(--fg2);text-decoration:line-through;text-decoration-color:var(--err);text-decoration-thickness:1px">The 2017 Seattle study found that the higher minimum wage reduced the number of low-wage jobs in the city.</p>
+        </div>
+        <div style="padding:22px 24px;min-width:0">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ok);margin-bottom:10px">FINAL · SUPPORTED</div>
+          <p style="margin:0;font-size:15.5px;line-height:1.6;color:var(--fg)">The 2017 Seattle study reported a reduction in <strong style="font-weight:600">hours worked</strong>, not in the number of people employed.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isAuth }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1000px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:center">
+    <div style="display:grid;gap:14px;align-content:start">
+      <h2 style="font-family:var(--disp);font-size:clamp(30px,4vw,46px);font-weight:600;letter-spacing:-.03em;margin:0;line-height:1.05">Answers you can hand to someone else.</h2>
+      <p style="margin:0;color:var(--fg2);font-size:16.5px;line-height:1.6;max-width:44ch">Sign in to keep your verification records, provider routing and retention settings across devices.</p>
+      <div style="display:grid;gap:8px;margin-top:6px">
+        <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3)">SOC 2 Type II · EU data residency available</div>
+      </div>
+    </div>
+    <div style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(26px) saturate(1.4);-webkit-backdrop-filter:blur(26px) saturate(1.4);border-radius:var(--r-xl);box-shadow:var(--sh),inset 0 1px 0 var(--hl);padding:28px;display:grid;gap:14px">
+      <div style="font-family:var(--disp);font-size:22px;font-weight:600;letter-spacing:-.02em">Sign in</div>
+      <label style="display:grid;gap:7px;font-size:13.5px;color:var(--fg2)">Work email
+        <input type="email" placeholder="you@company.com" style="padding:12px 14px;border-radius:12px;border:1px solid var(--line2);background:var(--gin);color:var(--fg);font-family:var(--sans);font-size:15px;outline:none;box-shadow:inset 0 1px 0 var(--hl);transition:border-color var(--ease)" style-focus="border-color:var(--accent)">
+      </label>
+      <label style="display:grid;gap:7px;font-size:13.5px;color:var(--fg2)">Password
+        <input type="password" placeholder="••••••••••" style="padding:12px 14px;border-radius:12px;border:1px solid var(--line2);background:var(--gin);color:var(--fg);font-family:var(--sans);font-size:15px;outline:none;box-shadow:inset 0 1px 0 var(--hl);transition:border-color var(--ease)" style-focus="border-color:var(--accent)">
+      </label>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13.5px;color:var(--fg2)">
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer">
+          <span style="width:20px;height:20px;border-radius:7px;border:1px solid var(--accent-line);background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--accent-ink);font-size:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35)">✓</span>Keep me signed in
+        </label>
+        <a href="#">Forgot password</a>
+      </div>
+      <button onClick="{{ signIn }}" style="margin-top:4px;padding:13px;border-radius:13px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:scale(.98)">Continue</button>
+      <button onClick="{{ signIn }}" style="padding:12px;border-radius:13px;border:1px solid var(--line2);background:var(--g2);color:var(--fg);font-size:14.5px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.98)">Continue with SSO</button>
+      <div style="font-size:12.5px;color:var(--fg3);text-align:center;line-height:1.5">Conversations are excluded from provider training. Retention defaults to 30 days.</div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isSystem }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1240px;margin:0 auto;padding:24px 24px 80px;display:grid;gap:22px">
+    <div>
+      <h2 style="font-family:var(--disp);font-size:clamp(26px,3vw,36px);font-weight:600;letter-spacing:-.03em;margin:0">Liquid Glass system</h2>
+      <p style="margin:6px 0 0;color:var(--fg2);font-size:15.5px;max-width:70ch;text-wrap:pretty">Materials are built from transparency, blur, one-pixel borders and inset edge highlights. No gradients anywhere — every fill is a solid or a solid at reduced alpha. Toggle the theme in the nav to see both palettes.</p>
+    </div>
+
+    <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:16px">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">COLOR TOKENS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px">
+        <sc-for list="{{ swatches }}" as="s" hint-placeholder-count="10">
+          <div style="border-radius:var(--r-m);border:1px solid var(--line);overflow:hidden;background:var(--g2)">
+            <div style="height:54px;background:{{ s.v }};border-bottom:1px solid var(--line)"></div>
+            <div style="padding:9px 11px">
+              <div style="font-size:13px;font-weight:600">{{ s.n }}</div>
+              <div style="font-family:var(--mono);font-size:10.5px;color:var(--fg3);margin-top:2px">{{ s.t }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px">
+      <div style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:14px;align-content:start">
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">TYPE SCALE</div>
+        <div style="font-family:var(--disp);font-size:44px;font-weight:600;letter-spacing:-.035em;line-height:1.05">Display 44/600</div>
+        <div style="font-family:var(--disp);font-size:28px;font-weight:600;letter-spacing:-.025em">Heading 28/600</div>
+        <div style="font-family:var(--disp);font-size:20px;font-weight:600;letter-spacing:-.02em">Subhead 20/600</div>
+        <div style="font-size:16.5px;color:var(--fg2);line-height:1.68">Body 16.5/1.68 — answer text never drops below this size. Source Sans 3 carries all reading copy; Bricolage Grotesque handles display and headings only.</div>
+        <div style="font-size:14px;color:var(--fg2)">Secondary 14 — labels, card copy, controls.</div>
+        <div style="font-family:var(--mono);font-size:11.5px;color:var(--fg3);letter-spacing:.06em">MONO 11.5 · STATUS, METADATA, MODEL IDS</div>
+      </div>
+      <div style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:14px;align-content:start">
+        <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">SPACING · RADIUS · MOTION</div>
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <sc-for list="{{ spacing }}" as="s" hint-placeholder-count="6">
+            <div style="display:grid;gap:6px;justify-items:center">
+              <div style="width:{{ s.w }};height:24px;border-radius:5px;background:var(--accent-soft);border:1px solid var(--accent-line)"></div>
+              <div style="font-family:var(--mono);font-size:10.5px;color:var(--fg3)">{{ s.n }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
+          <div style="width:64px;height:48px;border-radius:10px;border:1px solid var(--line2);background:var(--g2);display:flex;align-items:flex-end;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--fg3);padding-bottom:4px">10</div>
+          <div style="width:64px;height:48px;border-radius:16px;border:1px solid var(--line2);background:var(--g2);display:flex;align-items:flex-end;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--fg3);padding-bottom:4px">16</div>
+          <div style="width:64px;height:48px;border-radius:24px;border:1px solid var(--line2);background:var(--g2);display:flex;align-items:flex-end;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--fg3);padding-bottom:4px">24</div>
+          <div style="width:64px;height:48px;border-radius:32px;border:1px solid var(--line2);background:var(--g2);display:flex;align-items:flex-end;justify-content:center;font-family:var(--mono);font-size:10.5px;color:var(--fg3);padding-bottom:4px">32</div>
+        </div>
+        <div style="display:grid;gap:7px;margin-top:4px">
+          <sc-for list="{{ motion }}" as="m" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;gap:14px;font-size:13.5px;border-bottom:1px solid var(--line);padding-bottom:6px">
+              <span style="color:var(--fg2)">{{ m.n }}</span><span style="font-family:var(--mono);font-size:11.5px;color:var(--fg3);text-align:right">{{ m.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section style="border:1px solid var(--line);background:var(--g2);backdrop-filter:blur(18px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:14px">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">GLASS MATERIALS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <sc-for list="{{ materials }}" as="m" hint-placeholder-count="6">
+          <div style="padding:18px;border-radius:var(--r-m);border:1px solid {{ m.bd }};background:{{ m.bg }};backdrop-filter:blur(20px);box-shadow:{{ m.sh }};min-height:104px;display:grid;align-content:space-between">
+            <div style="font-size:14.5px;font-weight:600;color:{{ m.fg }}">{{ m.n }}</div>
+            <div style="font-family:var(--mono);font-size:10.5px;color:var(--fg3);line-height:1.5">{{ m.t }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="border:1px solid var(--line);background:var(--g1);backdrop-filter:blur(20px);border-radius:var(--r-l);box-shadow:inset 0 1px 0 var(--hl);padding:24px;display:grid;gap:18px">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">BUTTONS · HOVER LIFTS, PRESS COMPRESSES</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:translateY(0) scale(.97)">Primary</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:14px;font-weight:500;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.97)">Secondary</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid transparent;background:transparent;color:var(--fg2);font-size:14px;cursor:pointer;transition:background var(--ease),color var(--ease)" style-hover="background:var(--g2);color:var(--fg)">Ghost</button>
+        <button style="width:42px;height:42px;border-radius:13px;border:1px solid var(--line2);background:var(--g1);color:var(--fg2);cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px);color:var(--fg)" style-active="transform:scale(.94)">⌁</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--err);background:var(--err);color:#fff;font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.22);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.06)" style-active="transform:scale(.97)">Destructive</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--line2);background:var(--g1);color:var(--fg2);font-size:14px;cursor:wait;display:inline-flex;align-items:center;gap:9px;box-shadow:inset 0 1px 0 var(--hl)"><span style="width:13px;height:13px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--accent);animation:spin 900ms linear infinite"></span>Loading</button>
+        <button disabled="" style="padding:11px 20px;border-radius:12px;border:1px solid var(--line);background:var(--gdis);color:var(--fg3);font-size:14px;cursor:not-allowed">Disabled</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--ok);background:var(--ok);color:#06140E;font-size:14px;font-weight:600;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.28)">✓ Saved</button>
+        <button style="padding:11px 20px;border-radius:12px;border:1px solid var(--accent);background:var(--g1);color:var(--fg);font-size:14px;font-weight:500;cursor:pointer;outline:2px solid var(--accent-soft);outline-offset:2px;box-shadow:inset 0 1px 0 var(--hl)">Focused</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px;padding-top:6px;border-top:1px solid var(--line)">
+        <div style="display:grid;gap:12px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">CONTROLS</div>
+          <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+            <button onClick="{{ toggleRetain }}" role="switch" style="width:52px;height:30px;border-radius:999px;border:1px solid {{ rtBd }};background:{{ rtBg }};position:relative;cursor:pointer;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:background var(--ease)"><span style="position:absolute;top:3px;left:{{ rtX }};width:22px;height:22px;border-radius:50%;background:var(--gf);border:1px solid var(--line2);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.55);transition:left var(--spring)"></span></button>
+            <button onClick="{{ toggleMath }}" style="display:flex;align-items:center;gap:9px;border:0;background:transparent;color:var(--fg);font-size:14px;cursor:pointer">
+              <span style="width:22px;height:22px;border-radius:7px;border:1px solid {{ mathBd }};background:{{ mathBg }};display:flex;align-items:center;justify-content:center;color:var(--accent-ink);font-size:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,.3);transition:background var(--ease)">{{ mathMark }}</span>Checkbox
+            </button>
+            <div style="display:flex;gap:12px;align-items:center">
+              <sc-for list="{{ radios }}" as="r" hint-placeholder-count="2">
+                <button onClick="{{ r.go }}" style="display:flex;align-items:center;gap:8px;border:0;background:transparent;color:var(--fg);font-size:14px;cursor:pointer">
+                  <span style="width:20px;height:20px;border-radius:50%;border:1px solid {{ r.bd }};background:var(--gin);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 var(--hl)"><span style="width:9px;height:9px;border-radius:50%;background:{{ r.dot }};transition:transform var(--spring)"></span></span>{{ r.label }}
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;gap:10px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.09em;color:var(--fg3)">STATUS</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <sc-for list="{{ statusChips }}" as="s" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--g2);font-size:12.5px;color:{{ s.c }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ s.c }}"></span>{{ s.n }}</div>
+            </sc-for>
+          </div>
+          <button onClick="{{ openSettings }}" style="justify-self:start;margin-top:6px;padding:10px 18px;border-radius:12px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:14px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.97)">Open settings modal</button>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1240px;margin:0 auto;padding:24px 24px 80px;display:grid;gap:20px">
+    <div>
+      <h2 style="font-family:var(--disp);font-size:clamp(26px,3vw,36px);font-weight:600;letter-spacing:-.03em;margin:0">Responsive behaviour</h2>
+      <p style="margin:6px 0 0;color:var(--fg2);font-size:15.5px;max-width:70ch;text-wrap:pretty">On tablet the sidebar collapses to icons and agent cards move to a two-up grid. On mobile the pipeline becomes a horizontal rail, agent cards stack as accordions, comparison becomes a stepper, and the composer docks to the bottom above a five-item glass tab bar.</p>
+    </div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+      <sc-for list="{{ phones }}" as="p" hint-placeholder-count="3">
+        <div style="width:360px;flex:none;display:grid;gap:10px">
+          <div style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--fg3)">{{ p.label }}</div>
+          <div style="height:680px;border-radius:38px;border:1px solid var(--line2);background:var(--g1);backdrop-filter:blur(22px);box-shadow:var(--sh),inset 0 1px 0 var(--hl);padding:14px;display:grid;grid-template-rows:auto 1fr auto;gap:10px;overflow:hidden">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px">
+              <div style="display:flex;align-items:center;gap:8px"><div style="width:20px;height:20px;border-radius:7px;border:1px solid var(--accent-line);background:var(--accent-soft);display:flex;align-items:center;justify-content:center"><div style="width:7px;height:7px;background:var(--accent);border-radius:2px;transform:rotate(45deg)"></div></div><span style="font-family:var(--disp);font-weight:600;font-size:14.5px">{{ p.screen }}</span></div>
+              <span style="font-family:var(--mono);font-size:10.5px;color:var(--fg3)">{{ p.meta }}</span>
+            </div>
+            <div style="overflow:hidden;display:grid;gap:10px;align-content:start">
+              <sc-for list="{{ p.blocks }}" as="b" hint-placeholder-count="4">
+                <div style="padding:14px;border-radius:18px;border:1px solid {{ b.bd }};background:{{ b.bg }};box-shadow:inset 0 1px 0 var(--hl);display:grid;gap:7px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <div style="font-size:14.5px;font-weight:600">{{ b.t }}</div>
+                    <span style="width:7px;height:7px;border-radius:50%;background:{{ b.dot }};flex:none"></span>
+                  </div>
+                  <div style="font-size:13.5px;color:var(--fg2);line-height:1.5">{{ b.b }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:10px 14px;border-radius:20px;border:1px solid var(--line);background:var(--gf);backdrop-filter:blur(18px);box-shadow:inset 0 1px 0 var(--hl)">
+              <sc-for list="{{ p.tabs }}" as="t" hint-placeholder-count="5">
+                <div style="display:grid;justify-items:center;gap:4px;min-width:44px;min-height:44px;align-content:center;font-size:11px;color:{{ t.c }}">
+                  <span style="font-size:15px">{{ t.i }}</span>{{ t.n }}
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeModal }}" style="position:fixed;inset:0;z-index:90;background:rgba(6,8,12,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:24px">
+    <div style="width:min(620px,100%);max-height:84vh;overflow:auto;border:1px solid var(--line2);background:var(--gf);backdrop-filter:blur(30px) saturate(1.5);-webkit-backdrop-filter:blur(30px) saturate(1.5);border-radius:var(--r-xl);box-shadow:var(--sh),inset 0 1px 0 var(--hl);padding:26px;display:grid;gap:18px;animation:popin 420ms cubic-bezier(.22,1.2,.36,1) both">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+        <div>
+          <div style="font-family:var(--disp);font-size:22px;font-weight:600;letter-spacing:-.02em">Settings</div>
+          <div style="font-size:14px;color:var(--fg2);margin-top:3px">Defaults for new conversations.</div>
+        </div>
+        <button onClick="{{ closeModal }}" style="width:36px;height:36px;border-radius:11px;border:1px solid var(--line);background:var(--g2);color:var(--fg2);cursor:pointer;transition:transform var(--spring)" style-hover="transform:scale(1.05);color:var(--fg)" style-active="transform:scale(.94)">✕</button>
+      </div>
+      <div style="display:grid;gap:14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl)">
+          <div><div style="font-size:14.5px;font-weight:600">Theme</div><div style="font-size:13px;color:var(--fg3)">Glass tint follows the system palette</div></div>
+          <button onClick="{{ toggleTheme }}" style="padding:9px 16px;border-radius:11px;border:1px solid var(--line2);background:var(--g2);color:var(--fg);font-size:13.5px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.96)">{{ themeName }}</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl)">
+          <div><div style="font-size:14.5px;font-weight:600">Default answer style</div><div style="font-size:13px;color:var(--fg3)">Applied to every new question</div></div>
+          <div style="display:flex;gap:6px">
+            <sc-for list="{{ styles }}" as="s" hint-placeholder-count="3">
+              <button onClick="{{ s.go }}" style="padding:7px 12px;border-radius:999px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};font-size:13px;cursor:pointer">{{ s.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl);display:grid;gap:10px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><div style="font-size:14.5px;font-weight:600">Reasoning depth</div><div style="font-family:var(--mono);font-size:12.5px;color:var(--accent)">{{ depthLabel }}</div></div>
+          <div data-track="1" onPointerDown="{{ depthDown }}" style="position:relative;height:30px;display:flex;align-items:center;cursor:pointer;touch-action:none">
+            <div style="position:absolute;inset:11px 0;border-radius:999px;border:1px solid var(--line2);background:var(--gin);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)"></div>
+            <div style="position:absolute;left:0;top:11px;bottom:11px;width:{{ depthPct }};border-radius:999px;background:var(--accent)"></div>
+            <div style="position:absolute;left:{{ depthPct }};width:22px;height:22px;margin-left:-11px;border-radius:50%;border:1px solid var(--line2);background:var(--gf);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.5)"></div>
+          </div>
+        </div>
+        <div style="padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl);display:grid;gap:12px">
+          <div style="font-size:14.5px;font-weight:600">Providers</div>
+          <sc-for list="{{ providers }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13.5px">
+              <span style="font-family:var(--mono);font-size:12px;color:var(--fg2)">{{ p.m }}</span>
+              <span style="display:flex;align-items:center;gap:7px;color:{{ p.c }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ p.c }}"></span>{{ p.s }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border-radius:var(--r-m);border:1px solid var(--line);background:var(--g1);box-shadow:inset 0 1px 0 var(--hl)">
+          <div><div style="font-size:14.5px;font-weight:600">Retain transcripts</div><div style="font-size:13px;color:var(--fg3)">Off means nothing is written to disk</div></div>
+          <button onClick="{{ toggleRetain }}" role="switch" style="width:52px;height:30px;flex:none;border-radius:999px;border:1px solid {{ rtBd }};background:{{ rtBg }};position:relative;cursor:pointer;box-shadow:inset 0 1px 2px rgba(0,0,0,.2);transition:background var(--ease)"><span style="position:absolute;top:3px;left:{{ rtX }};width:22px;height:22px;border-radius:50%;background:var(--gf);border:1px solid var(--line2);box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.55);transition:left var(--spring)"></span></button>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button onClick="{{ closeModal }}" style="padding:11px 18px;border-radius:12px;border:1px solid var(--line2);background:var(--g1);color:var(--fg);font-size:14px;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl);transition:transform var(--spring)" style-hover="transform:translateY(-2px)" style-active="transform:scale(.97)">Cancel</button>
+        <button onClick="{{ closeModal }}" style="padding:11px 20px;border-radius:12px;border:1px solid var(--accent-line);background:var(--accent);color:var(--accent-ink);font-size:14px;font-weight:600;cursor:pointer;box-shadow:var(--sh-sm),inset 0 1px 0 rgba(255,255,255,.28);transition:transform var(--spring),filter var(--ease)" style-hover="transform:translateY(-2px);filter:brightness(1.07)" style-active="transform:scale(.97)">Save defaults</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark'|'light'&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;accentColor&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#6FA8FF&quot;,&quot;#B57BD0&quot;,&quot;#54BE8C&quot;,&quot;#DFA64F&quot;],&quot;default&quot;:&quot;#6FA8FF&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;},&quot;glassBlur&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:0,&quot;max&quot;:16,&quot;step&quot;:1,&quot;default&quot;:16,&quot;unit&quot;:&quot;%&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+class Component extends DCLogic {
+  state = {
+    theme: 'dark', view: 'landing', sidebar: true, step: 6, depth: 3, scrolled: false, navHidden: false,
+    lo: 2, hi: 5, tab: 'final', expanded: {}, modal: null, dragging: null,
+    q: '', style: 'Balanced', convo: 'c1', search: '',
+    toggles: { evidence: true, stream: false, retain: false, mathmode: true }
+  };
+  componentDidMount() {
+    this.applyTokens();
+    this._y = window.scrollY || 0;
+    this._onScroll = () => {
+      const y = window.scrollY || 0;
+      const s = y > 28;
+      this._y = y;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onScroll();
+  }
+  componentDidUpdate() { this.applyTokens(); }
+  componentWillUnmount() { clearInterval(this._t); window.removeEventListener('scroll', this._onScroll); }
+
+  applyTokens() {
+    const r = document.documentElement.style;
+    const a = this.props.accentColor;
+    if (a) {
+      r.setProperty('--accent', a);
+      r.setProperty('--accent-line', a);
+      r.setProperty('--accent-soft', a + '26');
+      r.setProperty('--gac', a + '1f');
+    }
+    const b = this.props.glassBlur;
+    if (b != null) r.setProperty('--hl', 'rgba(255,255,255,' + (0.06 + b / 100) + ')');
+    const th = this.props.defaultTheme;
+    if (th && this._th !== th) { this._th = th; if (th !== this.state.theme) this.setState({ theme: th }); }
+  }
+
+  run = () => {
+    clearInterval(this._t);
+    this.setState({ step: 0, view: 'app' });
+    this._t = setInterval(() => this.setState(s => {
+      if (s.step >= 6) { clearInterval(this._t); return null; }
+      return { step: s.step + 1 };
+    }), 1000);
+  };
+  reset = () => { clearInterval(this._t); this.setState({ step: -1 }); };
+
+  drag(key, min, max, step, clamp) {
+    return (e) => {
+      const rect = e.currentTarget.closest('[data-track]').getBoundingClientRect();
+      const move = (ev) => {
+        let p = (ev.clientX - rect.left) / rect.width;
+        p = Math.max(0, Math.min(1, p));
+        let v = Math.round((min + p * (max - min)) / step) * step;
+        if (clamp) v = clamp(v, this.state);
+        this.setState({ [key]: v, dragging: key });
+      };
+      move(e);
+      const up = () => {
+        window.removeEventListener('pointermove', move);
+        window.removeEventListener('pointerup', up);
+        this.setState({ dragging: null });
+      };
+      window.addEventListener('pointermove', move);
+      window.addEventListener('pointerup', up);
+    };
+  }
+
+  set = (k, v) => () => this.setState({ [k]: v });
+  toggle = (k) => () => this.setState(s => ({ toggles: { ...s.toggles, [k]: !s.toggles[k] } }));
+  expand = (k) => () => this.setState(s => ({ expanded: { ...s.expanded, [k]: !s.expanded[k] } }));
+
+  statusOf(i) {
+    const s = this.state.step;
+    if (s < 0) return 'waiting';
+    if (s > i) return 'done';
+    if (s === i) return 'running';
+    return 'waiting';
+  }
+
+  renderVals() {
+    const st = this.state, T = st.theme;
+    const scrollTo = (id) => () => {
+      this.setState({ view: 'landing' });
+      requestAnimationFrame(() => {
+        const el = document.getElementById(id);
+        if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 96, behavior: 'smooth' });
+      });
+    };
+    const views = st.signedIn
+      ? [['app', 'Workspace'], ['compare', 'Comparison'], ['system', 'Design system'], ['mobile', 'Responsive']]
+        .map(([id, label]) => ({ label, go: this.set('view', id), fg: st.view === id ? 'var(--fg)' : 'var(--fg2)' }))
+      : [['overview', 'Overview'], ['steps', 'Pipeline steps'], ['transparency', 'Transparency']]
+        .map(([id, label]) => ({ label, go: scrollTo(id), fg: 'var(--fg2)' }));
+    const stageNames = ['generate', 'verify', 'reason', 'refine', 'synthesize'];
+
+    const statusColor = { waiting: 'var(--unver)', running: 'var(--run)', done: 'var(--ok)', failed: 'var(--err)', skipped: 'var(--fg3)' };
+    const statusLabel = { waiting: 'Waiting', running: 'Running', done: 'Completed', failed: 'Failed', skipped: 'Skipped' };
+
+    const base = [
+      { key: 'gen', name: 'Answer Generator', model: 'claude-sonnet-4.6 · Anthropic', role: 'Drafts the first answer from the question and any supplied context.',
+        finding: 'Drafted a 5-paragraph answer with 6 factual claims and 2 quantitative estimates.',
+        detail: ['Framed the question as an empirical labour-economics question rather than a policy debate.', 'Cited Card & Krueger (1994) and the Seattle minimum-wage study without page references.', 'Estimated an employment elasticity of −0.1 to −0.3 with no source attached.'] },
+      { key: 'ver', name: 'Verifier', model: 'gpt-5.1 · OpenAI', role: 'Checks each factual claim against retrieved evidence and flags what cannot be sourced.',
+        finding: '6 claims checked — 4 supported, 1 corrected, 1 unverifiable.',
+        detail: ['Supported: Card & Krueger (1994) found no significant employment drop in New Jersey fast food.', 'Corrected: the Seattle study measured hours, not headcount; the draft conflated the two.', 'Unverifiable: the −0.1 to −0.3 elasticity range has no single authoritative source; estimates span −0.5 to +0.1.'] },
+      { key: 'rea', name: 'Reasoning Agent', model: 'gemini-3-pro · Google', role: 'Audits logic, hidden assumptions, contradictions and missing steps.',
+        finding: '2 logical gaps, 1 unstated assumption, no contradictions.',
+        detail: ['Unstated assumption: that a national result transfers to local labour markets with different wage floors.', 'Missing step: the answer never distinguishes short-run from long-run employment effects.', 'Scope drift: monopsony is introduced as an explanation but never connected to the conclusion.'] }
+    ];
+    const agents = base.map((a, i) => {
+      const s = this.statusOf(i + 1);
+      return { ...a, status: s, statusLabel: statusLabel[s], color: statusColor[s],
+        line: s === 'running' ? 'var(--accent-line)' : 'var(--line)',
+        bg: s === 'running' ? 'var(--gac)' : 'var(--g1)',
+        open: !!st.expanded[a.key], openLabel: st.expanded[a.key] ? 'Hide details' : 'Show details',
+        onToggle: this.expand(a.key), spin: s === 'running' ? 'spin 1.1s linear infinite' : 'none',
+        detailDisplay: st.expanded[a.key] ? 'grid' : 'none' };
+    });
+
+    const steps = ['Generate', 'Verify', 'Reason', 'Refine', 'Synthesize'];
+    const pipeline = steps.map((label, i) => {
+      const s = this.statusOf(i + 1);
+      return { label, status: s, statusLabel: statusLabel[s],
+        dot: statusColor[s],
+        bg: s === 'done' ? 'var(--g1)' : s === 'running' ? 'var(--gac)' : 'var(--gdis)',
+        bd: s === 'running' ? 'var(--accent-line)' : 'var(--line)',
+        fg: s === 'waiting' ? 'var(--fg3)' : 'var(--fg)' };
+    });
+
+    const depthLabels = { 1: 'Fast', 2: 'Light', 3: 'Standard', 4: 'Thorough', 5: 'Exhaustive' };
+    const pct = (v, min, max) => ((v - min) / (max - min) * 100) + '%';
+
+    const C = {
+      initial: { title: 'Initial answer', meta: 'claude-sonnet-4.6 · 3.1s',
+        body: ['Raising the minimum wage has a small negative effect on employment. Card and Krueger (1994) found no significant employment decline in New Jersey fast food, while the 2017 Seattle study found that the higher wage reduced the number of low-wage jobs.',
+          'Most estimates put the employment elasticity between −0.1 and −0.3, meaning a 10% wage increase reduces employment by 1–3%.',
+          'Monopsony power in local labour markets can offset the standard prediction.'],
+        changes: [{ kind: 'DRAFTED', color: 'var(--fg3)', text: '6 factual claims, 2 quantitative estimates.', why: 'No evidence retrieved yet; nothing is checked at this stage.' }] },
+      verify: { title: 'Verifier findings', meta: 'gpt-5.1 · 4.2s · 9 sources retrieved',
+        body: ['Four of six claims are supported by retrieved sources. One is wrong as written. One cannot be sourced at all.',
+          'Card & Krueger (1994) is correctly characterised. Cengiz et al. (2019) supports the claim that jobs shift up the wage distribution rather than disappearing.',
+          'The Seattle claim misstates the finding: the study measured hours, not headcount.'],
+        changes: [
+          { kind: 'SUPPORTED', color: 'var(--ok)', text: 'Card & Krueger (1994), Cengiz et al. (2019), and two secondary claims.', why: 'Matched against retrieved publications with direct quotations.' },
+          { kind: 'CORRECTED', color: 'var(--warn)', text: 'Seattle 2017 measured hours worked, not employment headcount.', why: 'The draft conflated two distinct outcome variables.' },
+          { kind: 'UNVERIFIED', color: 'var(--unver)', text: 'The −0.1 to −0.3 elasticity range.', why: 'No authoritative source; published estimates span −0.5 to +0.1.' }] },
+      reason: { title: 'Reasoning critique', meta: 'gemini-3-pro · 2.7s',
+        body: ['The argument is internally consistent but incomplete. It never separates short-run from long-run effects, which is where most of the published disagreement actually lives.',
+          'It also assumes results from one national labour market transfer to local markets with different wage floors relative to the median.',
+          'Monopsony is introduced as a mechanism but never connected back to the conclusion, so the paragraph does no work.'],
+        changes: [
+          { kind: 'MISSING STEP', color: 'var(--warn)', text: 'Short-run vs. long-run effects are never distinguished.', why: 'Without it the mixed evidence looks like contradiction rather than timing.' },
+          { kind: 'ASSUMPTION', color: 'var(--warn)', text: 'National results assumed to transfer to local markets.', why: 'The ratio of the floor to the local median changes the prediction.' },
+          { kind: 'SCOPE DRIFT', color: 'var(--unver)', text: 'Monopsony paragraph is unconnected.', why: 'Recommended for removal or explicit linkage.' }] },
+      refined: { title: 'Refined answer', meta: 'pass 2 of 2 · 1.4s',
+        body: ['Corrections applied in place: the Seattle claim now refers to hours, the elasticity range carries an unverified marker, and the short-run/long-run distinction has been added as the organising idea.',
+          'The monopsony paragraph was cut rather than expanded — it added a mechanism the answer never used.',
+          'No new claims were introduced during refinement; the refinement limit allows up to 5 passes and 2 were needed.'],
+        changes: [
+          { kind: 'APPLIED', color: 'var(--run)', text: '1 correction, 2 structural additions, 1 deletion.', why: 'Each edit is traceable to the agent that requested it.' },
+          { kind: 'HELD', color: 'var(--unver)', text: 'Elasticity range kept, still marked unverified.', why: 'Removing it would hide a disagreement rather than resolve it.' }] },
+      final: { title: 'Final answer', meta: 'synthesized · 11.4s total',
+        body: ['The empirical record is mixed, and the split is mostly about method. Modern studies do not find the large employment losses a simple competitive model predicts, but the strength of that conclusion depends on how far the new floor sits above the local median wage.',
+          'The Seattle result is a hours-worked finding, not a headcount finding. Cengiz et al. (2019) shows jobs shifting up the wage distribution rather than disappearing.',
+          'One quantitative claim remains unverified and is marked as such in the answer text. Two of three agents found it plausible; that agreement is recorded, not treated as evidence.'],
+        changes: [
+          { kind: 'SYNTHESIZED', color: 'var(--accent)', text: '4 supported claims, 1 corrected, 1 unverified, 0 contradictions.', why: 'The verification record ships attached to the answer.' },
+          { kind: 'DISAGREEMENT KEPT', color: 'var(--warn)', text: 'Verifier and reasoning agent disagreed on whether to cut the monopsony section.', why: 'Both positions are preserved in the record below the answer.' }] }
+    };
+    const cmp = C[st.tab] || C.final;
+
+    return {
+      theme: T, themeIcon: T === 'dark' ? '☾' : '☀',
+      toggleTheme: () => this.setState({ theme: T === 'dark' ? 'light' : 'dark' }),
+      views,
+      goAuth: this.set('view', 'auth'),
+      signedIn: !!st.signedIn, signedOut: !st.signedIn,
+      signIn: () => this.setState({ signedIn: true, view: 'app' }),
+      signOut: () => this.setState({ signedIn: false, view: 'landing' }),
+      navMaxW: st.scrolled ? '1080px' : '100%',
+      navPad: st.scrolled ? '8px 10px 8px 16px' : '14px 18px',
+      navBlur: st.scrolled ? '30px' : '18px',
+      navShadow: st.scrolled ? 'var(--sh),inset 0 1px 0 var(--hl)' : '0 1px 0 var(--line)',
+      stages: stageNames.map((label, i) => ({
+        label, n: '0' + (i + 1),
+        c: st.step === i + 1 ? 'var(--accent)' : 'var(--fg2)',
+        dot: ['var(--ok)', 'var(--run)', 'var(--warn)', 'var(--accent)', 'var(--unver)'][i],
+        barDisplay: i === stageNames.length - 1 ? 'none' : 'block'
+      })),
+      navWrapPad: st.scrolled ? '16px 16px 0' : '0px',
+      navRadius: st.scrolled ? '999px' : '0px',
+      navBg: st.scrolled ? 'var(--gf)' : 'var(--g2)',
+      navBorder: st.scrolled ? 'var(--line2)' : 'transparent',
+      isLanding: st.view === 'landing', isApp: st.view === 'app', isCompare: st.view === 'compare',
+      isSystem: st.view === 'system', isMobile: st.view === 'mobile', isAuth: st.view === 'auth',
+      goApp: st.signedIn ? this.set('view', 'app') : this.set('view', 'auth'), goCompare: this.set('view', 'compare'), goLanding: this.set('view', 'landing'),
+
+      heroNodes: [
+        { name: 'Answer Generator', model: 'claude-sonnet-4.6', note: 'Drafting six claims', top: '18%', dot: 'var(--ok)', line: 'var(--line2)' },
+        { name: 'Verifier', model: 'gpt-5.1', note: '4 supported · 1 corrected', top: '50%', dot: 'var(--accent)', line: 'var(--accent-line)' },
+        { name: 'Reasoning Agent', model: 'gemini-3-pro', note: '2 logical gaps found', top: '82%', dot: 'var(--warn)', line: 'var(--line2)' }
+      ],
+      workflow: [
+        { n: '01', title: 'Generate', body: 'One model drafts the answer and declares every claim it makes.' },
+        { n: '02', title: 'Verify', body: 'A second model retrieves evidence and marks each claim supported, corrected or unsourced.' },
+        { n: '03', title: 'Reason', body: 'A third audits the logic: assumptions, contradictions, missing steps.' },
+        { n: '04', title: 'Refine', body: 'Corrections are applied in place, bounded by your refinement limit.' },
+        { n: '05', title: 'Synthesize', body: 'The final answer ships with its verification record attached.' }
+      ],
+      features: [
+        { k: '◫', title: 'Claim-level provenance', body: 'Every sentence carries its status. Supported claims link to evidence; unverified claims stay visibly marked in the final text.' },
+        { k: '◐', title: 'Disagreement kept intact', body: 'When the verifier and the reasoning agent conflict, both positions survive into the answer instead of being averaged away.' },
+        { k: '⌁', title: 'Tunable depth', body: 'Reasoning depth and refinement limits are sliders, not hidden defaults. Fast for lookups, exhaustive for research.' },
+        { k: '⎔', title: 'Readable diffs', body: 'Compare the draft, the critique and the final answer side by side, with each change traced to the agent that caused it.' }
+      ],
+      privacy: [
+        { t: 'Nothing trains on you', b: 'Conversations are excluded from provider training by contract.' },
+        { t: 'Retention is yours', b: 'Default 30 days; set it to zero and transcripts never touch disk.' },
+        { t: 'Provider routing is visible', b: 'You always see which model handled which role.' },
+        { t: 'Evidence retrieval is opt-in', b: 'Turn it off and the verifier restricts itself to internal consistency.' }
+      ],
+
+      agents, pipeline,
+      step: st.step, running: st.step >= 0 && st.step < 6, done: st.step >= 6, idle: st.step < 0,
+      run: this.run, reset: this.reset,
+      depth: st.depth, depthLabel: depthLabels[st.depth], depthPct: pct(st.depth, 1, 5),
+      depthDown: this.drag('depth', 1, 5, 1),
+      loPct: pct(st.lo, 0, 8), hiPct: pct(st.hi, 0, 8),
+      rangeLeft: pct(st.lo, 0, 8), rangeWidth: ((st.hi - st.lo) / 8 * 100) + '%',
+      lo: st.lo, hi: st.hi,
+      loDown: this.drag('lo', 0, 8, 1, (v, s) => Math.min(v, s.hi - 1)),
+      hiDown: this.drag('hi', 0, 8, 1, (v, s) => Math.max(v, s.lo + 1)),
+      toggles: st.toggles, toggleEvidence: this.toggle('evidence'), toggleStream: this.toggle('stream'),
+      toggleRetain: this.toggle('retain'), toggleMath: this.toggle('mathmode'),
+      tabs: [
+        ['initial', 'Initial answer', 'var(--fg3)'], ['verify', 'Verifier findings', 'var(--ok)'],
+        ['reason', 'Reasoning critique', 'var(--warn)'], ['refined', 'Refined', 'var(--run)'], ['final', 'Final answer', 'var(--accent)']
+      ].map(([id, label, dot]) => ({
+        label, dot, go: this.set('tab', id),
+        bg: st.tab === id ? 'var(--gac)' : 'transparent',
+        bd: st.tab === id ? 'var(--accent-line)' : 'transparent',
+        fg: st.tab === id ? 'var(--fg)' : 'var(--fg2)'
+      })),
+      cmpTitle: cmp.title, cmpMeta: cmp.meta, cmpBody: cmp.body, cmpChanges: cmp.changes,
+      sidebarW: st.sidebar ? '272px' : '64px',
+      sidebarInner: st.sidebar ? 'grid' : 'none',
+      styles: ['Concise', 'Balanced', 'Exhaustive'].map(label => ({
+        label, go: this.set('style', label),
+        bg: st.style === label ? 'var(--accent-soft)' : 'var(--g2)',
+        bd: st.style === label ? 'var(--accent-line)' : 'var(--line)',
+        fg: st.style === label ? 'var(--accent)' : 'var(--fg2)'
+      })),
+      prompts: ['Summarize the evidence on X', 'Check this claim for me', 'Where do these two papers disagree?', 'What would falsify this?'],
+      runLabel: st.step >= 0 && st.step < 6 ? 'Running…' : 'Run 3 agents',
+      runningLabel: ['Queued', 'Generating the draft answer…', 'Verifying claims against sources…', 'Auditing logic and assumptions…', 'Applying corrections…', 'Synthesizing the final answer…'][Math.max(0, st.step)] || 'Working…',
+      evBg: st.toggles.evidence ? 'var(--accent)' : 'var(--gin)',
+      evBd: st.toggles.evidence ? 'var(--accent-line)' : 'var(--line2)',
+      evX: st.toggles.evidence ? '25px' : '3px',
+      stBg: st.toggles.stream ? 'var(--accent)' : 'var(--gin)',
+      stBd: st.toggles.stream ? 'var(--accent-line)' : 'var(--line2)',
+      stX: st.toggles.stream ? '25px' : '3px',
+      sources: [
+        { t: 'Card & Krueger (1994), AER — NJ/PA fast-food comparison', m: 'retrieved · supports claim 1' },
+        { t: 'Jardim et al. (2017), UW — Seattle minimum wage', m: 'retrieved · corrects claim 3' },
+        { t: 'Cengiz, Dube, Lindner, Zipperer (2019), QJE', m: 'retrieved · supports claim 4' },
+        { t: 'Elasticity range −0.1 to −0.3', m: 'no source found · left marked' }
+      ],
+      swatches: [
+        { n: 'Background', v: 'var(--bg)', t: '--bg' }, { n: 'Raised', v: 'var(--bg2)', t: '--bg2' },
+        { n: 'Ink', v: 'var(--fg)', t: '--fg' }, { n: 'Ink 2', v: 'var(--fg2)', t: '--fg2' },
+        { n: 'Accent', v: 'var(--accent)', t: '--accent' }, { n: 'Accent soft', v: 'var(--accent-soft)', t: '--accent-soft' },
+        { n: 'Success', v: 'var(--ok)', t: '--ok' }, { n: 'Warning', v: 'var(--warn)', t: '--warn' },
+        { n: 'Error', v: 'var(--err)', t: '--err' }, { n: 'Running', v: 'var(--run)', t: '--run' },
+        { n: 'Unverified', v: 'var(--unver)', t: '--unver' }, { n: 'Hairline', v: 'var(--line2)', t: '--line2' }
+      ],
+      spacing: [{ n: '4', w: '4px' }, { n: '8', w: '8px' }, { n: '12', w: '12px' }, { n: '16', w: '16px' }, { n: '24', w: '24px' }, { n: '32', w: '32px' }, { n: '48', w: '48px' }],
+      motion: [
+        { n: 'Spring (buttons, thumbs, knobs)', v: '420ms · cubic-bezier(.22,1.25,.36,1)' },
+        { n: 'Ease (color, blur, opacity)', v: '240ms · cubic-bezier(.2,.8,.2,1)' },
+        { n: 'Panel entrance', v: 'rise 480ms · 14px offset' },
+        { n: 'Modal entrance', v: 'popin 420ms · 0.96 → 1.007 → 1' },
+        { n: 'Agent card stagger', v: '60ms per card' },
+        { n: 'Reduced motion', v: 'all durations → 0.001ms' }
+      ],
+      materials: [
+        { n: 'Primary glass', bg: 'var(--g1)', bd: 'var(--line)', sh: 'inset 0 1px 0 var(--hl)', fg: 'var(--fg)', t: 'blur 22 · alpha .055 · panels' },
+        { n: 'Secondary glass', bg: 'var(--g2)', bd: 'var(--line)', sh: 'inset 0 1px 0 var(--hl)', fg: 'var(--fg)', t: 'blur 18 · alpha .032 · sections' },
+        { n: 'Floating glass', bg: 'var(--gf)', bd: 'var(--line2)', sh: 'var(--sh), inset 0 1px 0 var(--hl)', fg: 'var(--fg)', t: 'blur 30 · nav, modal, menus' },
+        { n: 'Inset glass', bg: 'var(--gin)', bd: 'var(--line2)', sh: 'inset 0 1px 2px rgba(0,0,0,.25)', fg: 'var(--fg)', t: 'recessed · inputs, tracks' },
+        { n: 'Active glass', bg: 'var(--gac)', bd: 'var(--accent-line)', sh: 'inset 0 1px 0 var(--hl)', fg: 'var(--fg)', t: 'accent tint · selected' },
+        { n: 'Disabled glass', bg: 'var(--gdis)', bd: 'var(--line)', sh: 'none', fg: 'var(--fg3)', t: 'no highlight · no shadow' }
+      ],
+      statusChips: [
+        { n: 'Waiting', c: 'var(--unver)' }, { n: 'Running', c: 'var(--run)' }, { n: 'Completed', c: 'var(--ok)' },
+        { n: 'Failed', c: 'var(--err)' }, { n: 'Skipped', c: 'var(--fg3)' }, { n: 'Unverified', c: 'var(--unver)' }
+      ],
+      radios: ['Auto', 'Manual'].map(label => ({
+        label, go: this.set('style', label === 'Auto' ? 'Balanced' : 'Concise'),
+        bd: (st.style === 'Balanced') === (label === 'Auto') ? 'var(--accent)' : 'var(--line2)',
+        dot: (st.style === 'Balanced') === (label === 'Auto') ? 'var(--accent)' : 'transparent'
+      })),
+      rtBg: st.toggles.retain ? 'var(--accent)' : 'var(--gin)',
+      rtBd: st.toggles.retain ? 'var(--accent-line)' : 'var(--line2)',
+      rtX: st.toggles.retain ? '25px' : '3px',
+      mathBg: st.toggles.mathmode ? 'var(--accent)' : 'var(--gin)',
+      mathBd: st.toggles.mathmode ? 'var(--accent-line)' : 'var(--line2)',
+      mathMark: st.toggles.mathmode ? '✓' : '',
+      themeName: T === 'dark' ? 'Dark' : 'Light',
+      providers: [
+        { m: 'anthropic / claude-sonnet-4.6', s: 'Operational', c: 'var(--ok)' },
+        { m: 'openai / gpt-5.1', s: 'Operational', c: 'var(--ok)' },
+        { m: 'google / gemini-3-pro', s: 'Elevated latency', c: 'var(--warn)' }
+      ],
+      phones: [
+        { label: 'MOBILE · 390 — WORKSPACE', screen: 'Ask', meta: 'depth 3',
+          blocks: [
+            { t: 'Composer', b: 'Docked above the tab bar, expands to full height while typing. 44px minimum targets throughout.', bd: 'var(--accent-line)', bg: 'var(--gac)', dot: 'var(--accent)' },
+            { t: 'Pipeline rail', b: 'Generate → Verify → Reason → Refine → Synthesize scrolls horizontally with the active step pinned left.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--run)' },
+            { t: 'Suggested prompts', b: 'Two rows of chips, wrapping; collapses once a question is entered.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--unver)' },
+            { t: 'Settings sheet', b: 'Sliders and toggles move into a bottom sheet instead of the sidebar.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--fg3)' }
+          ],
+          tabs: [{ i: '✎', n: 'Ask', c: 'var(--accent)' }, { i: '◍', n: 'Agents', c: 'var(--fg3)' }, { i: '☰', n: 'History', c: 'var(--fg3)' }, { i: '⇄', n: 'Compare', c: 'var(--fg3)' }, { i: '⚙', n: 'Settings', c: 'var(--fg3)' }] },
+        { label: 'MOBILE · 390 — AGENTS', screen: 'Agents', meta: 'running',
+          blocks: [
+            { t: 'Answer Generator', b: 'Completed · 6 claims drafted. Tap to expand the full contribution.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--ok)' },
+            { t: 'Verifier', b: 'Running · 9 sources retrieved, 4 supported so far.', bd: 'var(--accent-line)', bg: 'var(--gac)', dot: 'var(--run)' },
+            { t: 'Reasoning Agent', b: 'Waiting · starts when verification completes.', bd: 'var(--line)', bg: 'var(--gdis)', dot: 'var(--unver)' },
+            { t: 'Accordion behaviour', b: 'Only one card expands at a time so status stays scannable on a small screen.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--fg3)' }
+          ],
+          tabs: [{ i: '✎', n: 'Ask', c: 'var(--fg3)' }, { i: '◍', n: 'Agents', c: 'var(--accent)' }, { i: '☰', n: 'History', c: 'var(--fg3)' }, { i: '⇄', n: 'Compare', c: 'var(--fg3)' }, { i: '⚙', n: 'Settings', c: 'var(--fg3)' }] },
+        { label: 'MOBILE · 390 — ANSWER', screen: 'Answer', meta: 'verified',
+          blocks: [
+            { t: 'Verification summary', b: '4 supported · 1 corrected · 1 unverified. Sticky under the header while you scroll.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--ok)' },
+            { t: 'Answer body', b: '16.5px minimum, claim markers kept inline, tables scroll horizontally in their own frame.', bd: 'var(--line)', bg: 'var(--g1)', dot: 'var(--accent)' },
+            { t: 'Evidence drawer', b: 'Sources move below the answer and open as a swipe-up drawer.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--run)' },
+            { t: 'Compare stepper', b: 'Five versions become a swipeable stepper with a persistent “what changed” strip.', bd: 'var(--line)', bg: 'var(--g2)', dot: 'var(--warn)' }
+          ],
+          tabs: [{ i: '✎', n: 'Ask', c: 'var(--fg3)' }, { i: '◍', n: 'Agents', c: 'var(--fg3)' }, { i: '☰', n: 'History', c: 'var(--fg3)' }, { i: '⇄', n: 'Compare', c: 'var(--accent)' }, { i: '⚙', n: 'Settings', c: 'var(--fg3)' }] }
+      ],
+      modalOpen: st.modal === 'settings',
+      modal: st.modal, openSettings: this.set('modal', 'settings'), closeModal: this.set('modal', null),
+      sidebar: st.sidebar, toggleSidebar: () => this.setState(s => ({ sidebar: !s.sidebar }))
+    };
+  }
+}
+</script>
+</body>
+</html>
