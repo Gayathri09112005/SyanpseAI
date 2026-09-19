@@ -53,6 +53,12 @@ export function Workspace() {
   useEffect(() => {
     if (window.innerWidth < 900) setSidebarOpen(false);
   }, []);
+  useEffect(() => {
+    if (params.get('history') === '1') {
+      setSidebarOpen(true);
+      setParams({ history: null });
+    }
+  }, [params, setParams]);
   useEffect(() => setSettings(fromPrefs(user?.preferences)), [user?.preferences]);
 
   const { data: status } = useQuery({ queryKey: ['providers'], queryFn: system.providers, staleTime: 30_000 });
@@ -147,7 +153,10 @@ export function Workspace() {
       {view === 'compare' ? (
         <Compare run={run} conversationId={conversationId} onBack={() => setParams({ view: null })} />
       ) : (
-        <div style={{ maxWidth: 1440, margin: '0 auto', padding: '10px 20px 0', display: 'flex', gap: 16, alignItems: 'flex-start', minWidth: 0 }}>
+        <div className="app-shell" style={{ maxWidth: 1440, margin: '0 auto', padding: '10px 20px 0', display: 'flex', gap: 16, alignItems: 'flex-start', minWidth: 0 }}>
+          {sidebarOpen ? (
+            <div className="only-mobile" onClick={() => setSidebarOpen(false)} aria-hidden style={{ position: 'fixed', inset: 0, zIndex: 74, background: 'rgba(6,8,12,.45)', backdropFilter: 'blur(4px)', WebkitBackdropFilter: 'blur(4px)' }} />
+          ) : null}
           <Sidebar
             open={sidebarOpen}
             onToggle={() => setSidebarOpen((v) => !v)}
@@ -160,10 +169,10 @@ export function Workspace() {
             onOpenSettings={() => setParams({ settings: '1' })}
           />
 
-          <main style={{ flex: 1, minWidth: 0, display: 'grid', gap: 16, paddingBottom: 40 }}>
+          <main style={{ flex: 1, minWidth: 0, display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 16, paddingBottom: 40 }}>
             {!sidebarOpen ? (
-              <button type="button" onClick={() => setSidebarOpen(true)} className="btn-glass lift1" style={{ justifySelf: 'start', padding: '8px 14px', borderRadius: 4, fontSize: 13.5, display: 'none' }} data-mobile-only>
-                ☰ History
+              <button type="button" onClick={() => setSidebarOpen(true)} className="btn-glass lift1 only-mobile" style={{ justifySelf: 'start', alignItems: 'center', gap: 8, minHeight: 40, padding: '8px 14px', borderRadius: 4, fontSize: 14 }}>
+                ☰ Conversations
               </button>
             ) : null}
             {question && run.status !== 'idle' ? (

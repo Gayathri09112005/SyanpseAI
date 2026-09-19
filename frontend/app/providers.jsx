@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MotionConfig } from 'framer-motion';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { TopNav } from '@/components/TopNav';
 
@@ -12,8 +13,11 @@ export function Providers({ children }) {
   return (
     <QueryClientProvider client={client}>
       <ThemeProvider>
-        <TopNav />
-        {children}
+        {/* Honours prefers-reduced-motion for every Framer Motion animation. */}
+        <MotionConfig reducedMotion="user">
+          <TopNav />
+          {children}
+        </MotionConfig>
       </ThemeProvider>
     </QueryClientProvider>
   );

@@ -37,6 +37,7 @@ export function Modal({ open, onClose, title, subtitle, children, footer, width 
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
           onClick={onClose}
+          className="modal-scrim"
           style={{
             position: 'fixed', inset: 0, zIndex: 90, background: 'rgba(6,8,12,.45)',
             backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
@@ -49,6 +50,7 @@ export function Modal({ open, onClose, title, subtitle, children, footer, width 
             aria-modal="true"
             aria-label={title}
             tabIndex={-1}
+            className="modal-sheet"
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, y: 18, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}

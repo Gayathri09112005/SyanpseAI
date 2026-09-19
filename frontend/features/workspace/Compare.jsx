@@ -1,15 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import { useRailFocus } from '@/hooks/useRailFocus';
 import { Markdown } from '@/components/Markdown';
 import { compareTabs } from './derive';
 
 export function Compare({ run, conversationId, onBack }) {
   const [tab, setTab] = useState('final');
+  const railRef = useRailFocus(`${tab}:${Boolean(run?.agents?.generator)}`, '[aria-selected="true"]');
 
   if (!run || run.status === 'idle' || !run.agents.generator) {
     return (
-      <div style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 60px', display: 'grid', gap: 16 }}>
+      <div className="page" style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 60px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 16 }}>
         <Header conversationId={conversationId} passes={0} />
         <section style={{ border: '1px dashed var(--line2)', background: 'var(--g2)', borderRadius: 'var(--r-l)', padding: '56px 24px', textAlign: 'center', display: 'grid', gap: 12, justifyItems: 'center' }}>
           <div className="disp" style={{ fontSize: 20 }}>Nothing to compare yet</div>
@@ -31,10 +33,10 @@ export function Compare({ run, conversationId, onBack }) {
   const uncertain = run.result?.remainingUncertainty || [];
 
   return (
-    <div style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 60px', display: 'grid', gap: 16 }}>
+    <div className="page" style={{ maxWidth: 1240, margin: '0 auto', padding: '24px 24px 60px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 16 }}>
       <Header conversationId={conversationId} passes={passes} />
 
-      <div role="tablist" aria-label="Answer versions" style={{ display: 'flex', gap: 4, padding: 5, borderRadius: 'var(--r-m)', border: '1px solid var(--line)', background: 'var(--g2)', backdropFilter: 'blur(16px)', boxShadow: 'inset 0 1px 0 var(--hl)', flexWrap: 'wrap' }}>
+      <div ref={railRef} role="tablist" aria-label="Answer versions" className="rail rail-tabs" style={{ display: 'flex', gap: 4, padding: 5, borderRadius: 'var(--r-m)', border: '1px solid var(--line)', background: 'var(--g2)', backdropFilter: 'blur(16px)', boxShadow: 'inset 0 1px 0 var(--hl)', flexWrap: 'wrap' }}>
         {tabs.map((t) => {
           const on = t.id === current.id;
           return (
@@ -56,7 +58,7 @@ export function Compare({ run, conversationId, onBack }) {
       </div>
 
       <div className="compare-grid">
-        <section key={current.id} role="tabpanel" style={{ border: '1px solid var(--line)', background: 'var(--g1)', backdropFilter: 'blur(24px) saturate(1.4)', WebkitBackdropFilter: 'blur(24px) saturate(1.4)', borderRadius: 'var(--r-l)', boxShadow: 'var(--sh-sm),inset 0 1px 0 var(--hl)', padding: '26px 28px', minWidth: 0, animation: 'rise 340ms cubic-bezier(.22,1.2,.36,1) backwards' }}>
+        <section key={current.id} role="tabpanel" className="panel-lg" style={{ border: '1px solid var(--line)', background: 'var(--g1)', backdropFilter: 'blur(24px) saturate(1.4)', WebkitBackdropFilter: 'blur(24px) saturate(1.4)', borderRadius: 'var(--r-l)', boxShadow: 'var(--sh-sm),inset 0 1px 0 var(--hl)', padding: '26px 28px', minWidth: 0, animation: 'rise 340ms cubic-bezier(.22,1.2,.36,1) backwards' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
             <div className="disp" style={{ fontSize: 21, letterSpacing: '-.02em' }}>{current.title}</div>
             <div style={{ padding: '4px 10px', borderRadius: 999, border: '1px solid var(--line)', background: 'var(--g2)', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--fg3)' }}>{current.meta}</div>
@@ -113,12 +115,12 @@ export function Compare({ run, conversationId, onBack }) {
             {run.result ? `${run.result.keyCorrections.length} correction${run.result.keyCorrections.length === 1 ? '' : 's'}` : 'final pending'}
           </div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))' }}>
-          <div style={{ padding: '22px 24px', borderRight: '1px solid var(--line)', minWidth: 0 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))' }}>
+          <div className="answer-article" style={{ padding: '22px 24px', borderRight: '1px solid var(--line)', minWidth: 0 }}>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--warn)', marginBottom: 10 }}>DRAFT</div>
             {draft ? <Markdown className="muted">{draft}</Markdown> : <div style={{ fontSize: 14, color: 'var(--fg3)' }}>Draft transcript not retained.</div>}
           </div>
-          <div style={{ padding: '22px 24px', minWidth: 0 }}>
+          <div className="answer-article" style={{ padding: '22px 24px', minWidth: 0 }}>
             <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ok)', marginBottom: 10 }}>FINAL</div>
             {run.result ? <Markdown>{run.result.finalAnswer}</Markdown> : <div style={{ fontSize: 14, color: 'var(--fg3)' }}>No final answer yet.</div>}
           </div>

@@ -45,13 +45,13 @@ export function FinalAnswer({ run, question, busy, onRegenerate, onCompare, onSh
 
   return (
     <section style={{ border: '1px solid var(--line)', background: 'var(--g1)', backdropFilter: 'blur(26px) saturate(1.4)', WebkitBackdropFilter: 'blur(26px) saturate(1.4)', borderRadius: 6, boxShadow: 'var(--sh),inset 0 1px 0 var(--hl)', overflow: 'hidden', animation: 'rise 480ms cubic-bezier(.22,1.2,.36,1) backwards' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', padding: '18px 24px', borderBottom: '1px solid var(--line)' }}>
+      <div className="answer-head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap', padding: '18px 24px', borderBottom: '1px solid var(--line)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <span style={{ width: 9, height: 9, borderRadius: '50%', background: result.degraded ? 'var(--warn)' : 'var(--ok)' }} />
           <div className="disp" style={{ fontSize: 20, letterSpacing: '-.02em' }}>Final answer</div>
           <div className="meta">{meta}</div>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div className="stack-actions" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
           <button type="button" onClick={copy} className="btn-glass lift" style={headBtn}>{copied ? 'Copied' : 'Copy'}</button>
           <button type="button" onClick={onRegenerate} disabled={busy} className="btn-glass lift" style={headBtn}>Regenerate</button>
           <button type="button" onClick={() => exportMarkdown(question, result, evidence)} className="btn-glass lift" style={headBtn}>Export</button>
@@ -59,7 +59,7 @@ export function FinalAnswer({ run, question, busy, onRegenerate, onCompare, onSh
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', padding: '14px 24px', borderBottom: '1px solid var(--line)', background: 'var(--g2)' }}>
+      <div className="answer-chips" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', padding: '14px 24px', borderBottom: '1px solid var(--line)', background: 'var(--g2)' }}>
         <div style={chipStyle}><span className="dot" style={{ background: 'var(--ok)' }} />{counts.supported} claims supported</div>
         <div style={chipStyle}><span className="dot" style={{ background: 'var(--warn)' }} />{result.keyCorrections?.length || 0} corrected</div>
         <div style={chipStyle}><span className="dot" style={{ background: 'var(--unver)' }} />{counts.unverified} unverified</div>
@@ -70,7 +70,7 @@ export function FinalAnswer({ run, question, busy, onRegenerate, onCompare, onSh
       </div>
 
       <div className="answer-grid">
-        <article style={{ padding: '26px 30px', minWidth: 0 }}>
+        <article className="answer-article" style={{ padding: '26px 30px', minWidth: 0 }}>
           <Markdown>{result.finalAnswer}</Markdown>
         </article>
 

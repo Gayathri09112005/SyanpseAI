@@ -60,7 +60,7 @@ export function AuthScreen({ initialMode = 'login' }) {
   });
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '60px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 24, alignItems: 'center' }}>
+    <div className="page page-top" style={{ maxWidth: 1000, margin: '0 auto', padding: '60px 24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap: 24, alignItems: 'center' }}>
       <div style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
         <h1 className="disp" style={{ fontSize: 'clamp(30px,4vw,46px)', letterSpacing: '-.03em', margin: 0, lineHeight: 1.05 }}>
           Answers you can hand to someone else.
@@ -76,6 +76,7 @@ export function AuthScreen({ initialMode = 'login' }) {
       <form
         onSubmit={onSubmit}
         noValidate
+        className="panel-lg"
         style={{ border: '1px solid var(--line)', background: 'var(--g1)', backdropFilter: 'blur(26px) saturate(1.4)', WebkitBackdropFilter: 'blur(26px) saturate(1.4)', borderRadius: 'var(--r-xl)', boxShadow: 'var(--sh),inset 0 1px 0 var(--hl)', padding: 28, display: 'grid', gap: 14 }}
       >
         <div className="disp" style={{ fontSize: 22, letterSpacing: '-.02em' }}>{isRegister ? 'Create account' : 'Sign in'}</div>

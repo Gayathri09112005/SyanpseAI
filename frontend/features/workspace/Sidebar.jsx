@@ -55,7 +55,7 @@ export function Sidebar({ open, onToggle, activeId, onSelect, onNew, onOpenSetti
             title={open ? 'Collapse sidebar' : 'Expand sidebar'}
             aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}
             aria-expanded={open}
-            className="lift1 to-fg"
+            className="lift1 to-fg icon-btn"
             style={{ width: 36, height: 36, flex: 'none', borderRadius: 4, border: '1px solid var(--line)', background: 'var(--g2)', color: 'var(--fg2)', cursor: 'pointer', boxShadow: 'inset 0 1px 0 var(--hl)', transition: 'transform var(--spring)' }}
           >
             ☰
@@ -130,6 +130,7 @@ export function Sidebar({ open, onToggle, activeId, onSelect, onNew, onOpenSetti
                         type="button"
                         onClick={() => onSelect(c.id)}
                         aria-current={active ? 'true' : undefined}
+                        className="conv-title"
                         style={{ display: 'block', width: '100%', textAlign: 'left', padding: '10px 56px 10px 12px', border: 0, background: 'transparent', color: 'var(--fg)', cursor: 'pointer' }}
                       >
                         <div style={{ fontSize: 14, fontWeight: active ? 600 : 400, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.title}</div>
@@ -138,8 +139,8 @@ export function Sidebar({ open, onToggle, activeId, onSelect, onNew, onOpenSetti
                         </div>
                       </button>
                       <div style={{ position: 'absolute', right: 6, top: 8, display: 'flex', gap: 2 }}>
-                        <button type="button" onClick={() => setEditing(c.id)} aria-label={`Rename ${c.title}`} title="Rename" className="btn-ghost" style={{ borderRadius: 4, padding: '3px 6px', fontSize: 12 }}>✎</button>
-                        <button type="button" onClick={() => setDeleting(c)} aria-label={`Delete ${c.title}`} title="Delete" className="btn-ghost" style={{ borderRadius: 4, padding: '3px 6px', fontSize: 12 }}>✕</button>
+                        <button type="button" onClick={() => setEditing(c.id)} aria-label={`Rename ${c.title}`} title="Rename" className="btn-ghost icon-btn" style={{ borderRadius: 4, padding: '3px 6px', fontSize: 12 }}>✎</button>
+                        <button type="button" onClick={() => setDeleting(c)} aria-label={`Delete ${c.title}`} title="Delete" className="btn-ghost icon-btn" style={{ borderRadius: 4, padding: '3px 6px', fontSize: 12 }}>✕</button>
                       </div>
                     </div>
                   );

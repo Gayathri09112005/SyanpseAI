@@ -27,7 +27,7 @@ export function Composer({ style, onStyle, onRun, onCancel, busy, providersLine,
   };
 
   return (
-    <section className="glass1" style={{ borderRadius: 5, padding: 20, backdropFilter: 'blur(24px) saturate(1.4)' }}>
+    <section className="glass1 panel" style={{ borderRadius: 5, padding: 20, backdropFilter: 'blur(24px) saturate(1.4)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
         <div className="disp" style={{ fontSize: 20, letterSpacing: '-.02em' }}>Ask SynapseAI</div>
         <div className="meta">{providersLine}</div>
@@ -71,7 +71,7 @@ export function Composer({ style, onStyle, onRun, onCancel, busy, providersLine,
               );
             })}
           </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div className="stack-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             {busy ? (
               <button type="button" onClick={onCancel} className="btn-glass lift" style={{ padding: '10px 16px', borderRadius: 5, fontSize: 14, fontWeight: 500 }}>
                 Cancel run
@@ -87,7 +87,7 @@ export function Composer({ style, onStyle, onRun, onCancel, busy, providersLine,
           </div>
         </div>
       </div>
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
+      <div className="rail" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 14 }}>
         {PROMPTS.map((p) => (
           <button
             key={p}

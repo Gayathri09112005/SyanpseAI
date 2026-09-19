@@ -71,9 +71,9 @@ export function Landing() {
   ];
 
   return (
-    <div style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
-      <section id="overview" style={{ padding: '72px 0 28px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 26, justifyItems: 'center', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
+    <div className="page" style={{ maxWidth: 1240, margin: '0 auto', padding: '0 24px' }}>
+      <section id="overview" className="page-top" style={{ padding: '72px 0 28px', display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 26, justifyItems: 'center', textAlign: 'center' }}>
+        <div className="rail" style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '100%' }}>
           {STAGES.map((label, i) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '7px 15px', borderRadius: 999, border: '1px solid var(--line)', background: 'var(--g2)', fontFamily: 'var(--mono)', fontSize: 11.5, letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--fg2)' }}>
@@ -111,7 +111,7 @@ export function Landing() {
           <div style={{ fontFamily: 'var(--mono)', fontSize: 12, letterSpacing: '.08em', textTransform: 'uppercase', color: 'var(--fg3)' }}>Live pipeline</div>
           <div style={{ fontSize: 13.5, color: 'var(--fg2)' }}>“Does raising the minimum wage reduce employment?”</div>
         </div>
-        <div style={{ position: 'relative', height: 380, minWidth: 0 }} aria-label="Illustration: question flows to three agents, then synthesis, then a verified answer" role="img">
+        <div className="only-desktop" style={{ position: 'relative', height: 380, minWidth: 0 }} aria-label="Illustration: question flows to three agents, then synthesis, then a verified answer" role="img">
           <svg viewBox="0 0 1000 380" preserveAspectRatio="none" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} aria-hidden>
             <g fill="none" stroke="var(--line2)" strokeWidth="1.25" vectorEffect="non-scaling-stroke">
               {PATHS.map((d) => <path key={d} d={d} vectorEffect="non-scaling-stroke" />)}
@@ -143,6 +143,7 @@ export function Landing() {
             <div style={{ fontSize: 14, fontWeight: 600, marginTop: 4 }}>Answer</div>
           </div>
         </div>
+        <MobilePipeline nodes={heroNodes} />
       </section>
 
       <section id="steps" style={{ padding: '76px 0 8px' }}>
@@ -171,7 +172,7 @@ export function Landing() {
         ))}
       </section>
 
-      <section id="transparency" style={{ margin: '60px 0 0', padding: 34, borderRadius: 'var(--r-xl)', border: '1px solid var(--line)', background: 'var(--g2)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 0 var(--hl)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 34 }}>
+      <section id="transparency" className="panel-lg" style={{ margin: '60px 0 0', padding: 34, borderRadius: 'var(--r-xl)', border: '1px solid var(--line)', background: 'var(--g2)', backdropFilter: 'blur(20px)', boxShadow: 'inset 0 1px 0 var(--hl)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 34 }}>
         <div>
           <h2 className="disp" style={{ fontSize: 'clamp(24px,2.6vw,32px)', letterSpacing: '-.025em', margin: '0 0 12px' }}>Transparency is the product</h2>
           <p style={{ margin: 0, color: 'var(--fg2)', fontSize: 15.5, lineHeight: 1.6, maxWidth: '52ch', textWrap: 'pretty' }}>
@@ -192,7 +193,7 @@ export function Landing() {
         </div>
       </section>
 
-      <section style={{ margin: '56px 0 0', padding: '48px 34px', borderRadius: 'var(--r-xl)', border: '1px solid var(--accent-line)', background: 'var(--gac)', backdropFilter: 'blur(22px)', boxShadow: 'var(--sh-sm),inset 0 1px 0 var(--hl)', display: 'grid', gap: 16, justifyItems: 'center', textAlign: 'center' }}>
+      <section className="panel-lg" style={{ margin: '56px 0 0', padding: '48px 34px', borderRadius: 'var(--r-xl)', border: '1px solid var(--accent-line)', background: 'var(--gac)', backdropFilter: 'blur(22px)', boxShadow: 'var(--sh-sm),inset 0 1px 0 var(--hl)', display: 'grid', gap: 16, justifyItems: 'center', textAlign: 'center' }}>
         <h2 className="disp" style={{ fontSize: 'clamp(24px,3vw,34px)', letterSpacing: '-.03em', margin: 0, maxWidth: '22ch' }}>
           Sign in to run your own questions through all three agents.
         </h2>
@@ -219,6 +220,47 @@ export function Landing() {
           <a href="#steps">Docs</a>
         </div>
       </footer>
+    </div>
+  );
+}
+
+/** Phone layout of the hero diagram: the same nodes, flowing top to bottom. */
+function MobilePipeline({ nodes }) {
+  const Connector = () => (
+    <svg width="2" height="22" viewBox="0 0 2 22" aria-hidden style={{ display: 'block', margin: '0 auto', overflow: 'visible' }}>
+      <line x1="1" y1="0" x2="1" y2="22" stroke="var(--line2)" strokeWidth="1.25" />
+      <line x1="1" y1="0" x2="1" y2="22" stroke="var(--accent)" strokeWidth="1.5" strokeDasharray="5 9" style={{ animation: 'dashmove 1.3s linear infinite' }} />
+    </svg>
+  );
+  const end = (label, title, color) => (
+    <div style={{ ...nodeBox, padding: '12px 14px', textAlign: 'center' }}>
+      <div style={{ fontFamily: 'var(--mono)', fontSize: 10.5, letterSpacing: '.09em', color }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 600, marginTop: 3 }}>{title}</div>
+    </div>
+  );
+  return (
+    <div className="only-mobile" style={{ flexDirection: 'column', padding: '18px 16px 22px' }} role="img" aria-label="Illustration: question flows to three agents, then synthesis, then a verified answer">
+      {end('INPUT', 'Question', 'var(--fg3)')}
+      <Connector />
+      <div style={{ display: 'grid', gap: 8 }}>
+        {nodes.map((n) => (
+          <div key={n.name} style={{ ...nodeBox, border: `1px solid ${n.line}`, padding: '12px 14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: n.dot, animation: 'blink 1.8s ease-in-out infinite' }} />
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{n.name}</div>
+              <div style={{ fontSize: 12.5, color: 'var(--fg2)', marginLeft: 'auto', textAlign: 'right' }}>{n.note}</div>
+            </div>
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--fg3)', marginTop: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{n.model}</div>
+          </div>
+        ))}
+      </div>
+      <Connector />
+      <div style={{ alignSelf: 'center', padding: '12px 22px', borderRadius: 999, border: '1px solid var(--accent-line)', background: 'var(--gac)', boxShadow: 'var(--sh-sm),inset 0 1px 0 var(--hl)', textAlign: 'center', animation: 'pulsering 2.6s ease-out infinite' }}>
+        <div style={{ fontSize: 14, fontWeight: 600 }}>Synthesis</div>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10.5, color: 'var(--fg3)' }}>2 refinements</div>
+      </div>
+      <Connector />
+      {end('VERIFIED', 'Answer', 'var(--ok)')}
     </div>
   );
 }

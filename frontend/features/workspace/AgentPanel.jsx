@@ -1,6 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
+import { useRailFocus } from '@/hooks/useRailFocus';
 import { Markdown } from '@/components/Markdown';
 import { StatusDot } from '@/components/Controls';
 import {
@@ -19,15 +20,18 @@ const AGENTS = [
 
 export function AgentPanel({ run, providers, expanded, onToggle }) {
   const statuses = run.status === 'idle' ? {} : pipelineStatuses(run);
+  const activeStep = STEPS.find(([key]) => statuses[key] === 'running')?.[0] || 'none';
+  const railRef = useRailFocus(activeStep, `[data-step="${activeStep}"]`);
 
   return (
-    <section style={{ display: 'grid', gap: 14 }}>
-      <ol style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }} aria-label="Pipeline">
+    <section style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', gap: 14 }}>
+      <ol ref={railRef} className="rail" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }} aria-label="Pipeline">
         {STEPS.map(([key, label]) => {
           const s = statuses[key] || 'waiting';
           return (
             <li
               key={key}
+              data-step={key}
               aria-label={`${label}: ${STATUS_LABEL[s]}`}
               style={{
                 display: 'flex', alignItems: 'center', gap: 9, padding: '9px 15px', borderRadius: 4,
@@ -45,7 +49,7 @@ export function AgentPanel({ run, providers, expanded, onToggle }) {
         })}
       </ol>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: 14 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(300px,100%),1fr))', gap: 14 }}>
         {AGENTS.map((a, i) => {
           const state = run.agents[a.key];
           const s = run.status === 'idle' ? 'waiting' : statuses[{ generator: 'generate', verifier: 'verify', reasoner: 'reason' }[a.key]];
@@ -55,7 +59,7 @@ export function AgentPanel({ run, providers, expanded, onToggle }) {
             <div
               key={a.key}
               id={`agent-${a.key}`}
-              className="lift4"
+              className="lift4 panel"
               style={{
                 border: `1px solid ${s === 'running' ? 'var(--accent-line)' : s === 'failed' ? 'var(--err)' : 'var(--line)'}`,
                 background: s === 'running' ? 'var(--gac)' : 'var(--g1)',
