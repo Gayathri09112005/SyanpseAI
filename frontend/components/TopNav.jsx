@@ -9,6 +9,10 @@ import { useTheme } from './ThemeProvider';
 import { Logo } from './Logo';
 
 const BOUNCE = '560ms cubic-bezier(.34,1.5,.5,1)';
+// Bar at rest: 14+40+14 + 2px border = 70. Pill: 12 top gap + 8+40+8 + 2 = 70. Same height, no layout shift.
+const NAV_HEIGHT = 70;
+// Half the pill's height (58px): fully round ends, and a radius that animates proportionally.
+const PILL_RADIUS = 29;
 // Framer equivalents of the design's bouncy curve: low damping = visible overshoot.
 const PANEL_SPRING = { type: 'spring', stiffness: 520, damping: 19, mass: 0.8 };
 const ITEM_SPRING = { type: 'spring', stiffness: 600, damping: 22 };
@@ -42,7 +46,12 @@ function Nav() {
   }, [user?.id, savedTheme, setTheme]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled((window.scrollY || 0) > 28);
+    // Hysteresis: become a pill past 28px, but only return to a bar above 8px. A single threshold
+    // lets the morph itself nudge the scroll position back across the line and flicker.
+    const onScroll = () => {
+      const y = window.scrollY || 0;
+      setScrolled((was) => (was ? y > 8 : y > 28));
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -108,21 +117,25 @@ function Nav() {
 
   return (
     <div
+      data-scrolled={scrolled ? 'true' : 'false'}
       style={{
-        position: 'sticky', top: 0, zIndex: 60, display: 'flex', justifyContent: 'center',
-        padding: scrolled ? '16px 16px 0' : '0px', pointerEvents: 'none', transition: `padding ${BOUNCE}`,
+        position: 'sticky', top: 0, zIndex: 60, display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
+        // Fixed height in both states, so morphing never pushes the page content (no jump, no scroll-anchor feedback).
+        height: NAV_HEIGHT, boxSizing: 'border-box',
+        padding: scrolled ? '12px 16px 0' : '0px', pointerEvents: 'none', transition: `padding ${BOUNCE}`,
       }}
     >
       <div
         style={{
           position: 'relative', zIndex: 2, pointerEvents: 'auto', width: '100%', maxWidth: scrolled ? 1080 : '100%',
           border: `1px solid ${scrolled ? 'var(--line2)' : 'transparent'}`,
-          borderRadius: scrolled ? 999 : 0,
+          borderRadius: scrolled ? PILL_RADIUS : 0,
           background: scrolled ? 'var(--gf)' : 'var(--g2)',
           backdropFilter: `blur(${scrolled ? 30 : 18}px) saturate(1.5)`,
           WebkitBackdropFilter: `blur(${scrolled ? 30 : 18}px) saturate(1.5)`,
           boxShadow: scrolled ? 'var(--sh),inset 0 1px 0 var(--hl)' : '0 1px 0 var(--line)',
-          transition: `max-width ${BOUNCE},border-radius ${BOUNCE},box-shadow 420ms cubic-bezier(.2,.8,.2,1),background 320ms ease,border-color 320ms ease`,
+          // Width bounces (the design's spring); corners use the smooth curve so they round/square in step with it.
+          transition: `max-width ${BOUNCE},border-radius 460ms cubic-bezier(.2,.8,.2,1),box-shadow 420ms cubic-bezier(.2,.8,.2,1),background 320ms ease,border-color 320ms ease`,
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: scrolled ? '8px 10px 8px 16px' : '14px 18px', transition: `padding ${BOUNCE}` }}>
