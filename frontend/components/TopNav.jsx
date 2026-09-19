@@ -127,7 +127,9 @@ function Nav() {
     >
       <div
         style={{
-          position: 'relative', zIndex: 2, pointerEvents: 'auto', width: '100%', maxWidth: scrolled ? 1080 : '100%',
+          // min(): on screens narrower than 1080px both states resolve to 100%, so the springy curve has no
+          // px↔% gap to overshoot (a plain 1080px made phones shrink-then-expand when returning to the bar).
+          position: 'relative', zIndex: 2, pointerEvents: 'auto', width: '100%', maxWidth: scrolled ? 'min(1080px, 100%)' : '100%',
           border: `1px solid ${scrolled ? 'var(--line2)' : 'transparent'}`,
           borderRadius: scrolled ? PILL_RADIUS : 0,
           background: scrolled ? 'var(--gf)' : 'var(--g2)',
