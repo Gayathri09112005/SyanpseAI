@@ -205,3 +205,11 @@ test('the five reasoning depth levels are accepted', async () => {
   const bad = await agent.post('/api/v1/answers').send({ question: 'Depth check question', settings: { reasoningDepth: 'deep' } });
   assert.equal(bad.status, 422);
 });
+
+test('the API root describes the service instead of returning 404', async () => {
+  const supertest = (await import('supertest')).default;
+  const res = await supertest(app()).get('/');
+  assert.equal(res.status, 200);
+  assert.equal(res.body.name, 'SynapseAI API');
+  assert.equal(res.body.health, '/api/v1/health');
+});

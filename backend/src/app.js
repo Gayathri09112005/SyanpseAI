@@ -34,6 +34,17 @@ export function createApp() {
   app.use(mongoSanitize());
   if (!env.isTest) app.use(pinoHttp({ logger }));
 
+  // The API has no pages; say so plainly instead of a bare 404 when someone opens the service URL.
+  app.get('/', (_req, res) =>
+    res.json({
+      name: 'SynapseAI API',
+      status: 'ok',
+      app: env.frontendUrl.split(',')[0],
+      health: '/api/v1/health',
+      readiness: '/api/v1/ready',
+    }),
+  );
+
   app.use('/api/v1', apiLimiter, router);
 
   app.use(notFoundHandler);
